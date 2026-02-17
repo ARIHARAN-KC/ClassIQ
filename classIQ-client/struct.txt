@@ -1,0 +1,311 @@
+classiq-backend/
+│
+├── src/
+│   │
+│   ├── server.ts
+│   ├── app.ts
+│   │
+│   ├── config/
+│   │   ├── env.ts
+│   │   ├── db.ts
+│   │   ├── jwt.ts
+│   │   └── openrouter.ts
+│   │
+│   ├── modules/
+│   │
+│   │   ├── auth/
+│   │   │   ├── auth.controller.ts
+│   │   │   ├── auth.service.ts
+│   │   │   ├── auth.repository.ts
+│   │   │   ├── auth.routes.ts
+│   │   │   └── auth.types.ts
+│   │   │
+│   │   ├── users/
+│   │   │   ├── user.model.ts
+│   │   │   ├── user.controller.ts
+│   │   │   ├── user.service.ts
+│   │   │   ├── user.repository.ts
+│   │   │   └── user.routes.ts
+│   │   │
+│   │   ├── classes/
+│   │   │   ├── class.model.ts
+│   │   │   ├── class.controller.ts
+│   │   │   ├── class.service.ts
+│   │   │   ├── class.repository.ts
+│   │   │   └── class.routes.ts
+│   │   │
+│   │   ├── streams/
+│   │   │   ├── stream.model.ts
+│   │   │   ├── stream.controller.ts
+│   │   │   ├── stream.service.ts
+│   │   │   ├── stream.repository.ts
+│   │   │   └── stream.routes.ts
+│   │   │
+│   │   ├── assignments/
+│   │   │   ├── assignment.model.ts
+│   │   │   ├── assignment.controller.ts
+│   │   │   ├── assignment.service.ts
+│   │   │   ├── assignment.repository.ts
+│   │   │   └── assignment.routes.ts
+│   │   │
+│   │   ├── submissions/
+│   │   │   ├── submission.model.ts
+│   │   │   ├── submission.controller.ts
+│   │   │   ├── submission.service.ts
+│   │   │   ├── submission.repository.ts
+│   │   │   └── submission.routes.ts
+│   │   │
+│   │   ├── analytics/
+│   │   │   ├── analytics.controller.ts
+│   │   │   ├── analytics.service.ts
+│   │   │   └── analytics.routes.ts
+│   │   │
+│   │   ├── notifications/
+│   │   │   ├── notification.model.ts
+│   │   │   ├── notification.controller.ts
+│   │   │   ├── notification.service.ts
+│   │   │   ├── notification.repository.ts
+│   │   │   └── notification.routes.ts
+│   │   │
+│   │   ├── calendar/
+│   │   │   ├── calendar.model.ts
+│   │   │   ├── calendar.controller.ts
+│   │   │   ├── calendar.service.ts
+│   │   │   ├── calendar.repository.ts
+│   │   │   └── calendar.routes.ts
+│   │   │
+│   │   ├── focus/
+│   │   │   ├── focus.model.ts
+│   │   │   ├── focus.controller.ts
+│   │   │   ├── focus.service.ts
+│   │   │   └── focus.routes.ts
+│   │   │
+│   │   └── ai/
+│   │       ├── ai.controller.ts
+│   │       ├── ai.service.ts
+│   │       ├── ai.routes.ts
+│   │       ├── prompts/
+│   │       │   ├── assignment.prompt.ts
+│   │       │   ├── summary.prompt.ts
+│   │       │   ├── quiz.prompt.ts
+│   │       │   └── planner.prompt.ts
+│   │       └── vector/
+│   │           ├── embedding.service.ts
+│   │           └── semantic-search.service.ts
+│   │
+│   ├── middleware/
+│   │   ├── auth.middleware.ts
+│   │   ├── role.middleware.ts
+│   │   ├── error.middleware.ts
+│   │   ├── rateLimit.middleware.ts
+│   │   └── upload.middleware.ts
+│   │
+│   ├── utils/
+│   │   ├── ApiError.ts
+│   │   ├── ApiResponse.ts
+│   │   ├── generateClassCode.ts
+│   │   ├── logger.ts
+│   │   └── pagination.ts
+│   │
+│   ├── types/
+│   │   ├── express.d.ts
+│   │   └── global.types.ts
+│   │
+│   └── constants/
+│       ├── roles.ts
+│       └── messages.ts
+│
+├── tests/
+│
+├── .env
+├── .env.example
+├── package.json
+├── tsconfig.json
+└── README.md
+
+==========================================================================================
+
+ 1. Authentication APIs
+Base Route: /api/auth
+1 Register
+POST /api/auth/register
+Body:
+{
+  "name": "string",
+  "email": "string",
+  "password": "string",
+  "role": "teacher | student"
+}
+________________________________________
+2 Login
+POST /api/auth/login
+________________________________________
+3 Forgot Password
+POST /api/auth/forgot-password
+POST /api/auth/reset-password
+________________________________________
+4 Logout
+POST /api/auth/logout
+________________________________________
+2. User / Profile APIs
+Base: /api/users
+GET    /api/users/me
+PUT    /api/users/me
+GET    /api/users/:id
+________________________________________
+3. Class APIs
+Base: /api/classes
+Create Class (Teacher)
+POST /api/classes
+Join Class (Student)
+POST /api/classes/join
+Get All Classes (Dashboard)
+GET /api/classes
+Get Single Class
+GET /api/classes/:classId
+Update Class
+PUT /api/classes/:classId
+Delete Class
+DELETE /api/classes/:classId
+________________________________________
+4. Classroom Stream APIs
+Base: /api/streams
+Create Announcement
+POST /api/classes/:classId/streams
+Get Class Stream
+GET /api/classes/:classId/streams
+Delete Post
+DELETE /api/streams/:streamId
+________________________________________
+5. Assignment APIs
+Base: /api/assignments
+Create Assignment
+POST /api/classes/:classId/assignments
+Get Assignments (Classroom Page)
+GET /api/classes/:classId/assignments
+Get Assignment Detail
+GET /api/assignments/:assignmentId
+Update Assignment
+PUT /api/assignments/:assignmentId
+Delete Assignment
+DELETE /api/assignments/:assignmentId
+________________________________________
+6. Submission APIs
+Base: /api/submissions
+Upload Submission (Student)
+POST /api/assignments/:assignmentId/submissions
+Get All Submissions (Teacher)
+GET /api/assignments/:assignmentId/submissions
+Grade Submission
+PUT /api/submissions/:submissionId/grade
+Get My Submission
+GET /api/submissions/:submissionId
+________________________________________
+ 7. AI Feature APIs (OpenRouter Integration)
+Base: /api/ai
+________________________________________
+1 AI Copilot Chat
+POST /api/ai/chat
+________________________________________
+2 Class Summary
+POST /api/ai/class-summary
+________________________________________
+3 Generate Assignment Description
+POST /api/ai/generate-assignment
+________________________________________
+4 Assignment Explanation
+POST /api/ai/explain-assignment
+________________________________________
+5 Submission Summary
+POST /api/ai/submission-summary
+________________________________________
+6 Notes Generator (PDF/DOC Upload)
+POST /api/ai/generate-notes
+________________________________________
+7 Voice to Notes
+POST /api/ai/voice-to-text
+POST /api/ai/summarize-text
+________________________________________
+8 Difficulty Analysis
+POST /api/ai/analyze-difficulty
+________________________________________
+9 Plagiarism Check
+POST /api/ai/plagiarism-check
+________________________________________
+10 Study Planner
+POST /api/ai/study-planner
+________________________________________
+11 Quiz Generator
+POST /api/ai/generate-quiz
+________________________________________
+12 Translation
+POST /api/ai/translate
+________________________________________
+13 Semantic Search
+POST /api/ai/semantic-search
+________________________________________
+8. Analytics APIs
+Base: /api/analytics
+Teacher Performance Dashboard
+GET /api/analytics/class/:classId
+Student Progress
+GET /api/analytics/student/:studentId
+Deadline Risk Prediction
+GET /api/analytics/deadline-risk/:studentId
+________________________________________
+9. Notifications APIs
+Base: /api/notifications
+GET    /api/notifications
+PUT    /api/notifications/:id/read
+DELETE /api/notifications/:id
+________________________________________
+10. Calendar APIs
+Base: /api/calendar
+GET /api/calendar/events
+POST /api/calendar/events
+PUT /api/calendar/events/:eventId
+DELETE /api/calendar/events/:eventId
+________________________________________
+11. Focus Mode APIs
+POST /api/focus/start
+POST /api/focus/end
+GET  /api/focus/stats
+________________________________________
+Suggested MongoDB Collections
+users
+classes
+classMembers
+streams
+assignments
+submissions
+grades
+notifications
+calendarEvents
+focusSessions
+aiLogs
+________________________________________
+Estimated Backend Structure (TypeScript)
+src/
+ ├── controllers/
+ ├── services/
+ ├── models/
+ ├── routes/
+ ├── middleware/
+ ├── utils/
+ └── config/
+________________________________________
+Total API Modules Needed
+Module	Approx Endpoints
+Auth	4
+Users	3
+Classes	6
+Streams	3
+Assignments	5
+Submissions	4
+AI	13
+Analytics	3
+Notifications	3
+Calendar	4
+Focus	3
+Total ≈ 50+ endpoints	
+
