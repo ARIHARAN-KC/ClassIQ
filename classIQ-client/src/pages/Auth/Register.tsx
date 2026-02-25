@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { register } from "../api/auth";
-import type { Role } from "../api/auth";
+import { register } from "../../api/auth";
+import type { Role } from "../../api/auth";
 
 export default function Register() {
   const [form, setForm] = useState({ name: "", email: "", password: "", role: "student" as Role });
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -12,8 +13,18 @@ export default function Register() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
+  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setConfirmPassword(e.target.value);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate password match
+    if (form.password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
     setIsLoading(true);
     setError("");
     
@@ -119,13 +130,51 @@ export default function Register() {
                     required
                     value={form.password}
                     onChange={handleChange}
-                    className="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150 ease-in-out sm:text-sm"
+                    className={`appearance-none block w-full pl-10 pr-3 py-3 border rounded-lg placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150 ease-in-out sm:text-sm ${
+                      confirmPassword && form.password !== confirmPassword
+                        ? "border-red-300 bg-red-50"
+                        : "border-gray-200"
+                    }`}
                     placeholder="••••••••"
                   />
                 </div>
                 <p className="mt-1 text-xs text-gray-500">
                   Must be at least 8 characters
                 </p>
+              </div>
+
+              {/* Confirm Password Field */}
+              <div>
+                <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-2">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                  </div>
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    autoComplete="new-password"
+                    required
+                    value={confirmPassword}
+                    onChange={handleConfirmPasswordChange}
+                    className={`appearance-none block w-full pl-10 pr-3 py-3 border rounded-lg placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150 ease-in-out sm:text-sm ${
+                      confirmPassword && form.password !== confirmPassword
+                        ? "border-red-300 bg-red-50"
+                        : "border-gray-200"
+                    }`}
+                    placeholder="••••••••"
+                  />
+                </div>
+                {confirmPassword && form.password !== confirmPassword && (
+                  <p className="mt-1 text-xs text-red-600">
+                    Passwords do not match
+                  </p>
+                )}
               </div>
 
               {/* Role Selection */}
