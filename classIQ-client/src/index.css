@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Your global styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+}
