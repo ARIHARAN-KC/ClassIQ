@@ -80,7 +80,6 @@
                 }
         }
 
-
 TEACHER DASHBOARD:
 
     URL: GET http://localhost:5000/api/users/teacher-dashboard
@@ -133,8 +132,8 @@ STUDEND DASHBOARD:
 
 <!-- FORGET PASSWORD START-->
 
-STEP 1: 
-    URL: POST http://localhost:5000/api/auth/forgot-password
+STEP 1:
+    URL: POST <http://localhost:5000/api/auth/forgot-password>
 
     BODY(JSON):
         {
@@ -150,7 +149,7 @@ STEP 1:
         }
 
 STEP 2:
-    URL: POST http://localhost:5000/api/auth/reset-password
+    URL: POST <http://localhost:5000/api/auth/reset-password>
 
     BODY(JSON):
         {
@@ -178,3 +177,291 @@ STEP 2:
         "message":"Logged out successfully"
     }
 <!-- LOGOUT END -->
+
+=======================================================PROFILE END POINTS STARTS HERE==========================================================
+
+<!-- PROFILE UPDATE START-->
+
+    URL: PUT http://localhost:5000/api/users/me
+
+    Header: 
+        Authorization: Bearer YOUR_TOKEN
+
+    BODY(JSON):
+        {
+            "name": "New Name"
+        }
+
+    Expected:
+    STATUS CODE: 200
+
+    {
+    "success": true,
+    "statusCode": 200,
+    "message": "Profile updated successfully",
+    "data": {
+        "_id": "699eecd0afcd63e2f9ef2b17",
+        "name": "New Name",
+        "email": "test01@gmail.com",
+        "role": "student",
+        "createdAt": "2026-02-25T12:36:32.990Z",
+        "updatedAt": "2026-02-28T14:31:19.049Z",
+        "__v": 0
+    }
+}
+<!-- PROFILE UPDATE END-->
+
+<!-- GET THE PROFILE BY ID START-->
+
+    URL: GET http://localhost:5000/api/users/699eecd0afcd63e2f9ef2b17
+
+    Header: 
+        Authorization: Bearer YOUR_TOKEN
+
+    Expected:
+        STATUS CODE: 200
+        
+        {
+            "success": true,
+            "statusCode": 200,
+            "message": "User fetched successfully",
+            "data": {
+                "_id": "699eecd0afcd63e2f9ef2b17",
+                "name": "New Name",
+                "email": "test01@gmail.com",
+                "role": "student",
+                "createdAt": "2026-02-25T12:36:32.990Z",
+                "updatedAt": "2026-02-28T14:31:19.049Z",
+                "__v": 0
+        }
+}
+
+<!-- GET THE PROFILE BY ID END-->
+
+=======================================================CLASSES END POINTS STARTS HERE==========================================================
+
+<!-- CREATE CLASSES - ONLY BY TEACHERS START-->
+
+    URL: POST http://localhost:5000/api/classes
+
+    Header: 
+        Authorization: Bearer YOUR_TOKEN
+
+    
+    BODY(JSON):
+
+        {
+            "title": "Math 101",
+            "description": "Basic algebra"
+        }
+    
+    Expected:
+        STATUS CODE: 201
+
+        {
+            "success":true,
+            "statusCode":201,
+            "message":"Class created successfully",
+            "data":{"
+                title":"Math 101",
+                "description":"Basic algebra",
+                "teachers":[
+                    "69a301f0461f3c007799e345"
+                ],
+                "students":[],
+                "joinCode":"0FB25D",
+                "_id":"69a303390ffa991b480a8470",
+                "createdAt":"2026-02-28T15:01:13.046Z",
+                "updatedAt":"2026-02-28T15:01:13.046Z",
+                "__v":0
+            }
+        }
+<!-- CREATE CLASSES - ONLY BY TEACHERS END-->
+
+<!--JOIN CLASS (Student Only) START-->
+
+    URL: POST http://localhost:5000/api/classes/join
+
+    Header: 
+        Authorization: Bearer YOUR_TOKEN
+
+    BODY(JSON):
+        {
+            "joinCode": "0FB25D"
+        }
+
+    Expected:
+        STATUS CODE: 200
+
+        {
+            "success": true,
+            "statusCode": 200,
+            "message": "Joined class successfully",
+            "data": {
+                "_id": "69a303390ffa991b480a8470",
+                "title": "Math 101",
+                "description": "Basic algebra",
+                "teachers": [
+                    "69a301f0461f3c007799e345"
+                ],
+                "students": [
+                    "699ef235afcd63e2f9ef2b25"
+                ],
+                "joinCode": "0FB25D",
+                "createdAt": "2026-02-28T15:01:13.046Z",
+                "updatedAt": "2026-02-28T15:11:35.168Z",
+                "__v": 1
+            }
+        }
+<!--JOIN CLASS (Student Only) END-->
+
+<!-- GET ALL CLASSES[DASHBOARD] START -->
+
+    URL: GET http://localhost:5000/api/classes
+
+    Headers
+        Authorization: Bearer TOKEN
+
+        Teacher → sees classes they created
+
+        Student → sees classes they joined
+
+    Expected: 
+        STATUS CODE: 200
+    
+        {
+            "success":true,
+            "statusCode":200,
+            "message":"Classes fetched successfully",
+            "data":[{"_id":"69a303390ffa991b480a8470",
+            "title":"Math 101",
+            "description":"Basic algebra",
+            "teachers":[{
+                "_id":"69a301f0461f3c007799e345",
+                "name":"Teacher02",
+                "email":"teacher02@gmail.com"
+                }
+            ],
+            "students":[
+                "699ef235afcd63e2f9ef2b25"
+            ],
+            "joinCode":"0FB25D",
+            "createdAt":"2026-02-28T15:01:13.046Z",
+            "updatedAt":"2026-02-28T15:11:35.168Z",
+            "__v":1},
+            {
+                "_id":"69a308300ffa991b480a8480",
+                "title":"Machine Learning",
+                "description":"Welcome to ML classroom",
+                "teachers":[{
+                    "_id":"69a301f0461f3c007799e345",
+                    "name":"Teacher02",
+                    "email":"teacher02@gmail.com"
+                }
+            ],
+            "students":[
+                "699ef235afcd63e2f9ef2b25"
+            ],
+            "joinCode":"91F64B",
+            "createdAt":"2026-02-28T15:22:24.186Z",
+            "updatedAt":"2026-02-28T15:23:11.187Z",
+            "__v":1
+            }
+        ]
+    }
+<!-- GET ALL CLASSES[DASHBOARD] END-->
+
+<!-- GET SINGLE CLASS START -->
+
+    URL: GET http://localhost:5000/api/classes/69a303390ffa991b480a8470
+
+     Headers
+        Authorization: Bearer TOKEN
+
+        Teacher → sees classes they created
+
+        Student → sees classes they joined
+
+    Expected: 
+        STATUS CODE: 200
+
+        {
+            "success":true,
+            "statusCode":200,
+            "message":"Class fetched successfully",
+            "data":{
+                "_id":"69a303390ffa991b480a8470",
+                "title":"Math 101",
+                "description":"Basic algebra",
+                "teachers":[{
+                    "_id":"69a301f0461f3c007799e345",
+                    "name":"Teacher02",
+                    "email":"teacher02@gmail.com"
+                }
+            ],
+            "students":[{
+                "_id":"699ef235afcd63e2f9ef2b25",
+                "name":"test07",
+                "email":"test07@gmail.com"
+                }
+            ],
+            "joinCode":"0FB25D",
+            "createdAt":"2026-02-28T15:01:13.046Z",
+            "updatedAt":"2026-02-28T15:11:35.168Z",
+            "__v":1
+            }
+        }
+<!-- GET SINGLE CLASS START END-->
+
+<!-- UPDATE CLASS (Teacher Only) START-->
+
+    URL: PUT http://localhost:5000/api/classes/69a308300ffa991b480a8480
+
+    Headers
+        Authorization: Bearer TOKEN
+    
+    Expected: 
+        STATUS CODE: 200
+
+        {
+            "success":true,
+            "statusCode":200,
+            "message":"Class updated successfully",
+            "data":{
+                "_id":"69a308300ffa991b480a8480",
+                "title":"Advanced Machine Learning",
+                "description":"Welcome to ML classroom",
+                "teachers":[
+                    "69a301f0461f3c007799e345"
+                ],
+                "students":[
+                    "699ef235afcd63e2f9ef2b25"
+                ],
+                "joinCode":"91F64B",
+                "createdAt":"2026-02-28T15:22:24.186Z",
+                "updatedAt":"2026-02-28T15:28:16.762Z",
+                "__v":1
+            }
+        }
+<!-- UPDATE CLASS (Teacher Only) END-->
+
+<!-- DELETE CLASS (TEACHER ONLY) START-->
+
+    URL: DELETE http://localhost:5000/api/classes/69a308300ffa991b480a8480
+
+     Headers
+        Authorization: Bearer TOKEN
+
+    Expected:
+
+    STATUS CODE: 200
+
+    {
+        "success":true,
+        "statusCode":200,
+        "message":"Class deleted successfully",
+        "data":null
+    }
+
+<!-- DELETE CLASS (TEACHER ONLY) END-->
+===============================================================================================================================================

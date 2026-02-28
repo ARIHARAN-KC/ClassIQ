@@ -8,6 +8,10 @@ const router = Router();
 
 // Logged-in user
 router.get("/me", protect, userController.getMe);
+router.put("/me", protect, userController.updateMe);
+
+// Get user by ID (any logged-in user for now)
+router.get("/:id", protect, userController.getUserById);
 
 // Only teacher
 router.get(

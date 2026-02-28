@@ -4,6 +4,7 @@ import morgan from "morgan";
 
 import authRoutes from "./modules/auth/routes.js";
 import userRoutes from "./modules/users/userRoutes.js";
+import classRoutes from "./modules/classes/classRoutes.js";
 import { globalErrorHandler } from "./middleware/error.js";
 
 const app = express();
@@ -23,6 +24,7 @@ app.get("/", (_req, res) => {
 // Enable routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/classes", classRoutes)
 
 // 404
 app.use((_req, res) => {

@@ -125,7 +125,7 @@ classiq-backend/
 
 ==========================================================================================
 
- 1. Authentication APIs
+ 1. Authentication APIs -Done
 Base Route: /api/auth
 1 Register
 POST /api/auth/register
@@ -153,7 +153,7 @@ GET    /api/users/me
 PUT    /api/users/me
 GET    /api/users/:id
 ________________________________________
-3. Class APIs
+3. Class APIs  - Done
 Base: /api/classes
 Create Class (Teacher)
 POST /api/classes
@@ -307,5 +307,4 @@ Analytics	3
 Notifications	3
 Calendar	4
 Focus	3
-Total ≈ 50+ endpoints	
-
+Total ≈ 50+ endpoints
