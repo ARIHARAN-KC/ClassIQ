@@ -177,7 +177,7 @@ GET /api/classes/:classId/streams
 Delete Post
 DELETE /api/streams/:streamId
 ________________________________________
-5. Assignment APIs
+5. Assignment APIs - Done
 Base: /api/assignments
 Create Assignment
 POST /api/classes/:classId/assignments
@@ -190,7 +190,7 @@ PUT /api/assignments/:assignmentId
 Delete Assignment
 DELETE /api/assignments/:assignmentId
 ________________________________________
-6. Submission APIs
+6. Submission APIs -Done
 Base: /api/submissions
 Upload Submission (Student)
 POST /api/assignments/:assignmentId/submissions
@@ -204,7 +204,7 @@ ________________________________________
  7. AI Feature APIs (OpenRouter Integration)
 Base: /api/ai
 ________________________________________
-1 AI Copilot Chat
+1 AI ChatBot
 POST /api/ai/chat
 ________________________________________
 2 Class Summary
@@ -283,16 +283,6 @@ notifications
 calendarEvents
 focusSessions
 aiLogs
-________________________________________
-Estimated Backend Structure (TypeScript)
-src/
- ├── controllers/
- ├── services/
- ├── models/
- ├── routes/
- ├── middleware/
- ├── utils/
- └── config/
 ________________________________________
 Total API Modules Needed
 Module	Approx Endpoints

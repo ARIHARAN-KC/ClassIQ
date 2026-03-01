@@ -558,7 +558,7 @@ STEP 2:
     Headers:
         Bearer <your_teacher_token>
     
-    BODY[JSON]:
+    BODY[FORM-DATA]:
     without attachment
     {
         "title": "ML-2",
@@ -797,3 +797,169 @@ STEP 2:
         "message":"Assignment deleted successfully"
     }
 <!-- DELETE ASSIGMENT [ONLY BY TEACHER] END-->
+
+=============================================================================================================================================
+
+<!-- UPLOAD SUBMISSION FOR ASSIGNMENT[STUDENTS] START-->
+
+    URL: POST http://localhost:5000/api/assignments/:assignmentId/submissions
+
+    Example: POST http://localhost:5000/api/assignments/69a3e4cd3f6a5204c500f1d2/submissions
+
+    Headers:
+        Authorization: Bearer STUDENT_TOKEN
+    
+    BODY[FORM-DATA]:
+    
+    | KEY     | VALUE               | TYPE |
+    | ------- | ------------------- | ---- |
+    | comment | My final assignment | Text |
+    | files   | upload.pdf          | File |
+    | files   | diagram.png         | File |
+
+    Expected:
+    STATUS CODE: 201
+    
+    {
+    "success": true,
+    "data": {
+        "assignment": "69a3e4cd3f6a5204c500f1d2",
+        "student": "699ef235afcd63e2f9ef2b25",
+        "comment": "My final assignment",
+        "attachments": [
+            "/uploads/1772352912596-902611278.pdf"
+        ],
+        "_id": "69a3f590623c975f6f131a82",
+        "createdAt": "2026-03-01T08:15:12.912Z",
+        "updatedAt": "2026-03-01T08:15:12.912Z",
+        "__v": 0
+        }
+    }
+
+<!-- UPLOAD SUBMISSION FOR ASSIGNMENT[STUDENTS] END-->
+
+<!-- GET ALL SUBMISSION [TEACHER] START-->
+
+    URL: GET http://localhost:5000/api/assignments/:assignmentId/submissions
+
+    Example: GET http://localhost:5000/api/assignments/69a3e4cd3f6a5204c500f1d2/submissions
+    
+    Headers
+        Authorization: Bearer TEACHER_TOKEN
+
+    Expected:
+    STATUS CODE: 200
+    {
+        "success":true,
+        "data":[{
+            "_id":"69a3f590623c975f6f131a82",
+            "assignment":"69a3e4cd3f6a5204c500f1d2",
+            "student":{
+                "_id":"699ef235afcd63e2f9ef2b25",
+                "name":"test07",
+                "email":"test07@gmail.com"
+                },
+                "comment":"My final assignment",
+                "attachments":[
+                    "/uploads/1772352912596-902611278.pdf"
+                    ],
+                    "createdAt":"2026-03-01T08:15:12.912Z","
+                    updatedAt":"2026-03-01T08:15:12.912Z",
+                    "__v":0
+                    }
+                ]
+            }
+    
+<!-- GET ALL SUBMISSION [TEACHER] END-->
+
+<!-- GRADE SUBMISSION[TEACHER] START -->
+
+    URL: PUT http://localhost:5000/api/submissions/:submissionId/grade
+
+    Example: PUT http://localhost:5000/api/submissions/69a3f590623c975f6f131a82/grade
+
+    Headers:
+        Authorization: Bearer TEACHER_TOKEN
+
+    Expected:
+        STATUS CODE: 200
+        {
+            "success":true,
+            "data":{
+                "_id":"69a3f590623c975f6f131a82",
+                "assignment":{
+                    "_id":"69a3e4cd3f6a5204c500f1d2",
+                    "title":"Machine learning 1",
+                    "description":"Solve all exercises from Chapter 1",
+                    "dueDate":"2026-03-05T23:59:00.000Z",
+                    "totalMarks":100,
+                    "class":"69a303390ffa991b480a8470",
+                    "createdBy":"69a301f0461f3c007799e345",
+                    "attachments":["https://example.com/ml.pdf"],
+                    "createdAt":"2026-03-01T07:03:41.754Z",
+                    "updatedAt":"2026-03-01T07:03:41.754Z",
+                    "__v":0
+                },
+                "student":"699ef235afcd63e2f9ef2b25",
+                "comment":"My final assignment",
+                "attachments":[
+                    "/uploads/1772352912596-902611278.pdf"
+                ],
+                "createdAt":"2026-03-01T08:15:12.912Z",
+                "updatedAt":"2026-03-01T08:27:49.329Z",
+                "__v":0,
+                "marksObtained":85,
+                "feedback":"Good work, improve Flowchart.",
+                "gradedBy":"69a301f0461f3c007799e345",
+                "gradedAt":"2026-03-01T08:27:49.328Z"
+            }
+        }
+<!-- GRADE SUBMISSION[TEACHER] END -->
+
+<!-- GET SINGLE SUBMISSION[TEACHER/STUDENT] START -->
+
+    URL: GET http://localhost:5000/api/submissions/:submissionId
+
+    Example: GET http://localhost:5000/api/submissions/69a3f590623c975f6f131a82
+
+    Headers:
+        Authorization: Bearer TEACHER_TOKEN
+
+    Expected:
+        STATUS CODE: 200
+    {
+        "success":true,
+        "data":{
+            "_id":"69a3f590623c975f6f131a82",
+            "assignment":{
+                "_id":"69a3e4cd3f6a5204c500f1d2",
+                "title":"Machine learning 1",
+                "description":"Solve all exercises from Chapter 1",
+                "dueDate":"2026-03-05T23:59:00.000Z",
+                "totalMarks":100,
+                "class":"69a303390ffa991b480a8470",
+                "createdBy":"69a301f0461f3c007799e345",
+                "attachments":["https://example.com/ml.pdf"],
+                "createdAt":"2026-03-01T07:03:41.754Z",
+                "updatedAt":"2026-03-01T07:03:41.754Z",
+                "__v":0
+            },
+            "student":{
+                "_id":"699ef235afcd63e2f9ef2b25",
+                "name":"test07",
+                "email":"test07@gmail.com"
+            },
+            "comment":"My final assignment",
+            "attachments":[
+                "/uploads/1772352912596-902611278.pdf"
+                ],
+            "createdAt":"2026-03-01T08:15:12.912Z",
+            "updatedAt":"2026-03-01T08:27:49.329Z",
+            "__v":0,
+            "feedback":"Good work, improve Flowchart.",
+            "gradedAt":"2026-03-01T08:27:49.328Z",
+            "gradedBy":"69a301f0461f3c007799e345",
+            "marksObtained":85
+        }
+    }
+<!-- GET SINGLE SUBMISSION[TEACHER/STUDENT] EMD -->
