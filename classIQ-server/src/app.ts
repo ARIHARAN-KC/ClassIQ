@@ -9,6 +9,9 @@ import classRoutes from "./modules/classes/classRoutes.js";
 import streamRoutes from "./modules/streams/streamRoutes.js";
 import assignmentRoutes from "./modules/assignment/assignmentRoutes.js";
 import submissionRoutes from "./modules/submission/submissionRoutes.js";
+
+// AI route
+import aiRoutes from "./modules/ai/aiRoutes.js";
 import { globalErrorHandler } from "./middleware/error.js";
 
 const app = express();
@@ -33,6 +36,8 @@ app.use("/api", streamRoutes);
 app.use("/api", assignmentRoutes);
 app.use("/api", submissionRoutes);
 
+// AI routes
+app.use("/api/ai", aiRoutes);
 // File upload
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 

@@ -963,3 +963,285 @@ STEP 2:
         }
     }
 <!-- GET SINGLE SUBMISSION[TEACHER/STUDENT] EMD -->
+
+==============================================================================================================================================
+
+<!-- AI CHAT START -->
+
+    URL: POST http://localhost:5000/api/ai/chat
+
+     Headers:
+        Authorization: Bearer TEACHER_TOKEN
+
+    BODY{JSON}:
+    {
+        "message": "Explain polymorphism in Programming"
+    }
+
+    Expected:
+        STATUS CODE: 200
+        {
+            "success":true,
+            "data":"Polymorphism is a fundamental concept in programming, particularly in object-oriented programming (OOP). It allows objects of different classes to be treated as objects of a common superclass. The term \"polymorphism\" comes from the Greek words \"poly\" (meaning \"many\") and \"morph\" (meaning \"form\"), which reflects the idea that a single function or method can take many forms.\n\n### Types of Polymorphism\n\n1. **Compile-time Polymorphism (Static Polymorphism)**:\n   - Achieved through method overloading and operator overloading.\n   - Method Overloading: Multiple methods in the same class can have the same name with different parameters (different type or number of parameters).\n     ```python\n     class MathOperations:\n         def add(self, a: int, b: int) -> int:\n             return a + b\n         \n         def add(self, a: float, b: float) -> float:\n             return a + b\n     ```\n   - Operator Overloading: Customizing the behavior of operators for user-defined types.\n\n2. **Run-time Polymorphism (Dynamic Polymorphism)**:\n   - Achieved through method overriding, where a subclass provides a specific implementation of a method that is already defined in its superclass.\n   - Involves the use of virtual functions or interfaces in languages like Java, C++, and Python.\n     ```python\n     class Animal:\n         def make_sound(self):\n             pass\n\n     class Dog(Animal):\n         def make_sound(self):\n             return \"Bark\"\n\n     class Cat(Animal):\n         def make_sound(self):\n             return \"Meow\"\n\n     def animal_sound(animal: Animal):\n         print(animal.make_sound())\n\n     dog = Dog()\n     cat = Cat()\n     animal_sound(dog)  # Output: Bark\n     animal_sound(cat)  # Output: Meow\n     ```\n\n### Benefits of Polymorphism\n\n- **Code Reusability**: Write generic code that works with different types of objects.\n- **Flexibility and Maintainability**: Easier to extend and modify code without affecting existing functionality.\n- **Improved Readability**: Clearer and more intuitive code structure, allowing developers to understand behavior through interfaces and abstract classes.\n\n### Summary\n\nPolymorphism enhances the flexibility and scalability of code in object-oriented programming by allowing methods to operate on objects of various types. By leveraging polymorphism, developers can write more generic and reusable code, leading to better software design."
+        }
+<!-- AI CHAT END -->
+
+<!-- AI SUMMARY START -->
+
+    URL: POST http://localhost:5000/api/ai/class-summary
+
+    Headers:
+        Authorization: Bearer TOKEN
+
+    BODY{JSON}:
+        {
+            "classNotes": "Today we studied inheritance, encapsulation and polymorphism in Java."
+        }
+
+    Expected:
+        STATUS CODE: 200
+    {
+        "success":true,
+        "data":"It seems that there is no specific information provided about the class activity you would like summarized. Please provide the details of the class activity, and I’ll be happy to help you format a summary in markdown!"
+    }
+<!-- AI SUMMARY END -->
+
+<!-- AI GENERATE ASSIGNMENT START -->
+
+    URL: POST http://localhost:5000/api/ai/generate-assignment
+
+    Headers:
+        Authorization: Bearer TOKEN
+    
+    BODY{JSON}:
+        {
+            "topic": "Binary Trees",
+            "difficulty": "medium",
+            "classLevel": "B.Tech 2nd Year"
+        }
+    Expected:
+        STATUS CODE: 200
+    {
+        "success":true,
+        "data":"# Assignment Title: Exploring Binary Trees\n\n## Description:\nIn this assignment, students will explore the structure and functionality of binary trees, a fundamental data structure in computer science. Students will learn to implement basic operations such as insertion, traversal, and searching within a binary tree.\n\n## Instructions:\n1. **Research Binary Trees**:\n   - Understand what a binary tree is and its properties.\n   - Research different types of binary trees (e.g., full binary trees, complete binary trees, binary search trees).\n\n2. **Implement a Binary Tree**:\n   - Write a program in your preferred programming language that creates a binary tree. \n   - Include functions for the following operations:\n     - Insertion of nodes\n     - In-order, pre-order, and post-order traversal\n     - Searching for a specific value in the tree\n\n3. **Documentation**:\n   - Document your code clearly, explaining how each function works.\n   - Provide comments within the code to describe the logic behind key sections.\n\n4. **Test Your Implementation**:\n   - Create test cases to demonstrate the functionality of your binary tree implementation.\n   - Include at least three different scenarios for insertion and traversal.\n\n5. **Submission**:\n   - Submit your code along with a short report (1-2 pages) summarizing your findings about binary trees, the challenges you faced while implementing the tree, and how you resolved them.\n\n## Evaluation Criteria:\n| Criteria                       | Excellent (5 points) | Good (4 points) | Satisfactory (3 points) | Needs Improvement (2 points) | Unsatisfactory (1 point) |\n|--------------------------------|----------------------|------------------|-------------------------|------------------------------|--------------------------|\n| **Understanding of Concepts**  | Demonstrates a thorough understanding of binary trees and their types | Shows good understanding with minor gaps | Basic understanding but lacks depth | Limited understanding of concepts | No understanding of concepts |\n| **Code Implementation**        | Code is well-structured, efficient, and functions as intended | Code works with minor issues | Code works but is poorly structured | Code has significant issues | Code does not work |\n| **Documentation**              | Clear, comprehensive documentation | Good documentation with minor gaps | Basic documentation | Poor documentation | No documentation provided |\n| **Testing**                    | Comprehensive test cases that cover all scenarios | Good test cases with minor gaps | Basic test cases | Limited testing | No testing provided |\n| **Report Quality**             | Insightful, well-written report | Good report with minor gaps | Basic report | Poorly written report | No report provided |\n\n**Total Points: 25**\n\n---\n\n**Due Date**: [Insert Due Date Here]\n\n**Note**: Be sure to follow the code style guidelines for the language you are using. Collaboration is encouraged, but each student must submit their own work."
+    }
+
+<!-- AI GENERATE ASSIGNMENT END -->
+
+<!-- AI EXPLAIN ASSIGMENTE START -->
+
+    URL: POST http://localhost:5000/api/ai/explain-assignment
+
+    Headers:
+        Authorization: Bearer TOKEN
+    
+    BODY{JSON}:
+        {
+             "assignmentText": "Implement a binary search tree with insert, delete and traversal."
+        }
+
+    Expected:
+        STATUS CODE:200
+        {
+            "success": true,
+             "data": "Sure! Here's a simple explanation of your assignment:\n\n1️ **Introduction:** A Binary Search Tree (BST) is a data structure where each node has at most two children. The left child contains values smaller than the parent, and the right child contains values larger than the parent.\n\n2️ **Insert Method:**\n- Start at the root.\n- Compare the value to insert with the current node.\n- If smaller, go left; if larger, go right.\n- Repeat until you find an empty spot and insert the new node.\n\n3 **Delete Method:**\n- Find the node to delete.\n- If it has no children, just remove it.\n- If it has one child, replace it with its child.\n- If it has two children, find the smallest node in the right subtree (successor), replace the node with it, and delete the successor node.\n\n4️ **Traversal Methods:**\n- **Inorder (Left, Root, Right):** Gives values in sorted order.\n- **Preorder (Root, Left, Right):** Useful for copying the tree.\n- **Postorder (Left, Right, Root):** Useful for deleting the tree.\n\n5️ **Python Example:**\n```python\nclass Node:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\n# Example of insert, delete, and traversal functions here...\n```\n\nThis step-by-step explanation should help a beginner understand how to implement and work with a BST."
+        }
+<!-- AI EXPLAIN ASSIGMENTE END -->
+
+<!-- AI SUBMISSION SUMMARY START-->
+
+    URL: POST http://localhost:5000/api/ai/submission-summary
+
+    Headers:
+        Authorization: Bearer TOKEN
+
+    BODY{JSON}:
+        {
+            "submissionText": "**Introduction:** A Binary Search Tree (BST) is a data structure where each node has at most two children. The left child contains values smaller than the parent, and the right child contains values larger than the parent.\n\n2️ **Insert Method:**\n- Start at the root.\n- Compare the value to insert with the current node.\n- If smaller, go left; if larger, go right.\n- Repeat until you find an empty spot and insert the new node.\n\n3 **Delete Method:**\n- Find the node to delete.\n- If it has no children, just remove it.\n- If it has one child, replace it with its child.\n- If it has two children, find the smallest node in the right subtree (successor), replace the node with it, and delete the successor node.\n\n4️ **Traversal Methods:**\n- **Inorder (Left, Root, Right):** Gives values in sorted order.\n- **Preorder (Root, Left, Right):** Useful for copying the tree.\n- **Postorder (Left, Right, Root):** Useful for deleting the tree.\n\n5️ **Python Example:**\n```python\nclass Node:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\n# Example of insert, delete, and traversal functions here...\n```\n\nThis step-by-step explanation should help a beginner understand how to implement and work with a BST."
+        }
+    
+    Expected:
+        STATUS CODE: 200
+    
+    {
+        "success":true,
+        "data":"..."
+    }
+
+<!-- AI SUBMISSION SUMMARY END-->
+
+<!-- NOTES GENERATOR (PDF/DOC Upload) START-->
+
+    URL: POST http://localhost:5000/api/ai/generate-notes
+
+    Headers:
+        Authorization: Bearer TOKEN
+
+    BODY{FORM-DATA}:
+    
+        file            d:\DOC\AgriTrace.pdf
+        instructions    Make short notes with bullet points
+
+    Expected:
+    STATUS CODE: 200
+    {
+        "success":true,
+        "data":"# Study Notes on AgriTrace – Digital Traceability and Certification Platform for Agricultural Produce\n\n## 1. Title of Proposed Idea\n**AgriTrace**  \nDigital Traceability and Certification Platform for Agricultural Produce\n\n---\n\n## 2. Problem Definition and Relevance\n### Problem\nIn the agricultural ecosystem, there is a lack of transparency in the supply chain leading to:\n- **Consumer Distrust**: Concerns over the authenticity of organic, fair trade, and high-quality products.\n- **Market Access Issues**: Small-scale farmers are losing access to markets due to insufficient certifications and traceability.\n- **Export Challenges**: Non-compliance or unverifiable produce origins result in export rejections.\n- **Middlemen Dominance**: This reduces fair pricing and profitability for actual producers.\n\n### Relevance\n- Growing global demand for safe, sustainable, and traceable food necessitates digitally verifiable supply chain records.\n- Supports government initiatives towards digital agriculture, farm-to-fork transparency, and sustainable consumption (SDG 12).\n\n---\n\n## 3. Proposed Solution\n**AgriTrace** is a software-only digital platform enabling:\n- **Farmers**: Register harvest batches with key details (location, inputs, harvest dates).\n- **Certification Authorities**: Digitally approve and tag certifications (e.g., organic, FSSAI).\n- **Processors and Distributors**: Log activities such as packaging and transport.\n- **Consumer Transparency**: QR code-based traceability for consumers and regulators to view product journeys.\n- **Admin Tools**: For auditing, analytics, and multi-lingual access.\n\n**Inclusivity**: Designed for online and offline use, ensuring accessibility in remote rural areas.\n\n---\n\n## 4. Unique Features and Newness\n- **Blockchain-inspired Logging**: Immutable event records without costly infrastructure.\n- **Farmer-first Usability**: Minimal input burden with vernacular UI and offline support.\n- **Digital Certification Workflow**: Direct linking of approved certificates with produce batches.\n- **QR-based Consumer Transparency**: Open access for consumers to scan QR codes and view product journeys.\n- **AI-readiness**: Architecture supports future features like fraud detection and yield prediction.\n- **Affordability & Scalability**: Suitable for widespread rural deployment without dependency on high-tech tools.\n\n---\n\n## 5. Competitive Analysis\n| Feature                        | Existing Solutions                        | AgriTrace                               |\n|--------------------------------|------------------------------------------|-----------------------------------------|\n| Blockchain                     | Needed (costly, complex)                 | No                                      |\n| Mobile-first, Offline Support   | Rare                                     | Yes                                     |\n| Farmer-Centric UI/UX          | Moderate                                 | High                                    |\n| QR-based Consumer Traceability  | Limited or gated                         | Open Access                             |\n| Built-in Certification Workflow | Not integrated                           | Fully embedded                          |\n| Multilingual Support           | Limited                                  | Yes (Modular)                          |\n\n---\n\n## 6. Intellectual Property Considerations\n- **Originality**: The idea does not rely on existing intellectual property.\n- **Future Plans**: IP filing proposed for the certificate integration and batch traceability module.\n\n---\n\n## 7. Potential Areas of Application\n- **Organic Farming Cooperatives**\n- **Agricultural Exporters & Processing Units**\n- **Retail & E-commerce Grocery Chains** (interested in transparency)\n- **Farmer Producer Organizations (FPOs)**\n- **Agri-insurance Providers and Traceability Audits**\n- **Certification Agencies** (FSSAI, India Organic, GlobalGAP)\n- **NGOs** working in sustainable agriculture\n- **Agri-Tech Startups**\n- **State Agriculture Departments**\n\n---\n\n## 8. Market Data\n### Market Size (India)\n- Organic food market: ₹12,000+ crore (2024)\n- Export market for fresh produce: ₹45,000+ crore\n- Total agricultural supply chain tech market: Growing at 12-14% CAGR\n\n### Market Growth Rate\n- Traceability demand rising at 20% CAGR globally.\n- Digitization of supply chain expected to reach $12 billion by 2027 in India.\n\n### Profitability\n- High demand from retailers for certified supply chains.\n- Low operational cost due to software-only model.\n\n### Product and Consumer Type\n- B2B SaaS for processors, certifiers, exporters.\n- B2C (QR scan access for consumers).\n- B2G (government traceability programs).\n\n---\n\n## 9. Current Development Status\n- **UI/UX Designs**: Completed (farmer dashboard, certification screen, QR trace viewer).\n- **Backend Architecture**: Drafted with append-only logs.\n- **Prototype**: In progress using React and Node.js.\n- **QR Generation & Traceability Viewer**: Functional alpha developed.\n\n### Expected Completion Time\n- **6 months** for MVP (Minimum Viable Product) with core modules.\n\n---\n\n## 10. Financial Requirements\n| Sl. No. | Description                            | Expected Expenditure (₹) |\n|---------|----------------------------------------|---------------------------|\n| 1       | Cost of purchase of raw materials      | 0 (software-only)         |\n| 2       | Cost of contingencies                  | ₹50,000                   |\n| 3       | Product development cost                | ₹6,00,000                 |\n| 4       | Other expenditure (testing, hosting)   | ₹1,00,000                 |\n| **Total** |                                      | **₹7,50,000**            |\n\n---\n\n## 11. Activity-wise Break-up\n| Particulars/Items                                    | Total Project Cost (Rs. In Lakh) | Amount GOI Assistance (Rs. In Lakh) | Incubatee Share (Rs. In Lakh) |\n|-----------------------------------------------------|----------------------------------|-------------------------------------|--------------------------------|\n| Technology-related Expenditure (Hosting, cloud infra, dev tools, testing, QA) | 6.00                             | 5.00                                | 1.00                           |\n| Charges for mentor/handholding supporting team       | 1.00                             | 1.00                                | 0.00                           |\n| Travelling expenses (farmer interviews, pilot demo)  | 0.50                             | 0.50                                | 0.00                           |\n| **Total Cost**                                       | **7.50**                        | **6.50**                            | **1.00**                      |\n\n--- \n\nThis structured format provides a comprehensive overview of the AgriTrace innovation proposal, highlighting its relevance, solution details, unique features, competitive analysis, market data, and financial requirements."
+}
+
+<!-- NOTES GENERATOR (PDF/DOC Upload) END-->
+
+<!-- SUMMARIZE-TEXT START -->
+
+    URL: POST http://localhost:5000/api/ai/summarize-text
+
+    Headers: 
+        Authorization: Bearer TOKEN
+
+    BODY{JSON}:
+        
+    {
+        "text": "Python is a high-level, general-purpose programming language. Its design philosophy emphasizes code readability with the use of significant indentation.[38] Python is dynamically type-checked and garbage-collected. It supports multiple programming paradigms, including structured (particularly procedural), object-oriented and functional programming.Guido van Rossum began working on Python in the late 1980s as a successor to the ABC programming language. Python 3.0, released in 2008, was a major revision and not completely backward-compatible with earlier versions. Beginning with Python 3.5,[39] capabilities and keywords for typing were added to the language, allowing optional static typing.[40] As of 2026, the Python Software Foundation supports Python 3.10, 3.11, 3.12, 3.13, and 3.14, following the project's annual release cycle and five-year support policy. Python 3.15 is currently in the alpha development phase, and the stable release is expected to come out in October 2026.[41] Earlier versions in the 3.x series have reached end-of-life and no longer receive security updates.Python has gained widespread use in the machine learning community.[42][43][44][45] It is widely taught as an introductory programming language.[46] Since 2003, Python has consistently ranked in the top ten of the most popular programming languages in the TIOBE Programming Community Index, which ranks based on searches in 24 platforms.[47]"
+    }
+
+    Expected:
+    STATUS CODE: 200
+        {
+            "success":true,
+            "data":"**Summary of Python Programming Language:**\n\n- **Overview**: Python is a high-level, general-purpose programming language known for its emphasis on code readability and significant indentation.\n- **Features**: It is dynamically typed and garbage-collected, supporting various programming paradigms such as structured (procedural), object-oriented, and functional programming.\n- **History**: Developed by Guido van Rossum in the late 1980s as a successor to the ABC language. Python 3.0 was released in 2008, marking a major revision that was not fully backward-compatible.\n- **Typing**: Starting with Python 3.5, optional static typing features were introduced.\n- **Current Support**: As of 2026, the Python Software Foundation supports versions 3.10 to 3.14, adhering to an annual release cycle and a five-year support policy. Python 3.15 is in alpha development, with a stable release anticipated in October 2026.\n- **Usage**: Python is extensively used in the machine learning community and is commonly taught as an introductory programming language. It has consistently ranked in the top ten of the TIOBE Programming Community Index since 2003, which measures popularity based on search queries across various platforms."
+        } 
+<!-- SUMMARIZE-TEXT END -->
+
+<!-- ANALYZE DIFICULTY START -->
+
+    URL: POST http://localhost:5000/api/ai/analyze-difficulty
+
+    Headers:
+        Authorization: Bearer TOKEN
+    
+    BODY{JSON}:
+        {
+             "question": "Explain time complexity of quicksort in programming language"
+        }
+    
+    Expected:
+    STATUS CODE: 200
+
+    {
+        "success":true,
+        "data":"It seems like you've mentioned \"undefined,\" which can refer to several different concepts depending on the context (e.g., mathematics, programming, etc.). However, I will analyze the difficulty level of understanding \"undefined\" in common contexts:\n\n### 1. Mathematics (e.g., Division by Zero)\n- **Difficulty Level: Medium**\n- **Explanation**: In mathematics, \"undefined\" often refers to expressions that do not have a meaningful value, such as division by zero. For instance, \\( \\frac{1}{0} \\) is considered undefined because there is no number that can be multiplied by 0 to yield 1. Understanding why this is the case requires a grasp of basic arithmetic and the properties of numbers, which may pose a challenge for some students.\n\n### 2. Programming (e.g., Undefined Variables)\n- **Difficulty Level: Medium**\n- **Explanation**: In programming, \"undefined\" typically indicates a variable that has been declared but has not been assigned a value. Understanding this concept requires knowledge of programming syntax and semantics. It can be tricky for beginners who are still learning how variables function within a programming language.\n\n### 3. Philosophy (e.g., Conceptual Understanding)\n- **Difficulty Level: Hard**\n- **Explanation**: In philosophical discussions, \"undefined\" can refer to concepts or ideas that lack a clear definition or are open to interpretation. Analyzing and debating these concepts requires critical thinking skills and a deep understanding of the subject matter, which can be quite challenging for many students.\n\n### Conclusion\nThe difficulty level of \"undefined\" varies depending on the context in which it is used. Generally, it can be categorized as Medium in mathematics and programming, while it can be considered Hard in philosophical discussions. Understanding the specific context is crucial for accurately assessing the difficulty level. If you have a specific context in mind, please provide more details for a more tailored analysis."
+    }
+<!-- ANALYZE DIFICULTY END -->
+
+<!-- PLAGIARISM CHECK START-->
+
+    URL: POST http://localhost:5000/api/ai/plagiarism-check
+
+    Headers:
+         Authorization: Bearer TOKEN
+
+    BODY{JSON}:
+        {
+             "text": "Student submission text here..."
+        }
+    
+    Expected:
+        STATUS CODE: 200
+    {
+        "success":true,
+        "data":{...}
+    }
+<!-- PLAGIARISM CHECK END-->
+
+<!-- STUDY PLANNER START -->
+
+    URL: POST http://localhost:5000/api/ai/study-planner
+
+    Headers:
+         Authorization: Bearer TOKEN
+
+    BODY{JSON}:
+        {
+            "subjects": ["DBMS", "OS", "Java"],
+            "examDate": "2026-03-10",
+            "hoursPerDay": 3    
+        }
+
+    Expected:
+        STATUS CODE: 200
+
+        {
+            "success":true,
+            "data":"Here's a structured daily study plan for DBMS (Database Management Systems), OS (Operating Systems), and Java that you can follow until March 10, 2026. This plan assumes you will study each subject on alternating days to keep the material fresh and balanced. You can adjust the hours based on your availability and understanding of each subject.\n\n### Daily Study Plan\n\n**Weekly Structure:**\n- **Monday**: DBMS\n- **Tuesday**: OS\n- **Wednesday**: Java\n- **Thursday**: DBMS\n- **Friday**: OS\n- **Saturday**: Java\n- **Sunday**: Review/Practice\n\n### Subject Breakdown\n\n#### 1. **Database Management Systems (DBMS)**\n- **Topics to Cover**:\n  - Introduction to DBMS\n  - Database Models\n  - SQL Queries\n  - Normalization\n  - Transactions and Concurrency\n  - Indexing and Hashing\n  - NoSQL Databases\n\n#### 2. **Operating Systems (OS)**\n- **Topics to Cover**:\n  - Process Management\n  - Threads and Concurrency\n  - CPU Scheduling\n  - Memory Management\n  - File Systems\n  - I/O Systems\n  - Security and Protection\n\n#### 3. **Java Programming**\n- **Topics to Cover**:\n  - Basics of Java\n  - Object-Oriented Programming (OOP) Concepts\n  - Exception Handling\n  - Collections Framework\n  - Java Streams and I/O\n  - Java GUI Development\n  - Multithreading\n\n### Example Daily Schedule\n\n#### **Daily Study Routine**\n- **Morning Session (2-3 hours)**\n  - Review previous topics\n  - Learn new concepts\n  - Take notes\n\n- **Afternoon Session (2-3 hours)**\n  - Hands-on practice (coding for Java, SQL queries for DBMS, etc.)\n  - Work on exercises or projects\n\n- **Evening Session (1-2 hours)**\n  - Review what you've learned\n  - Prepare for the next day\n\n### Weekly Goals\n- **Week 1-4**: Focus on foundational concepts for each subject.\n- **Week 5-8**: Move to intermediate topics, start mini-projects or assignments.\n- **Week 9-12**: Advanced topics and concepts, enhance hands-on practice.\n\n### Review and Practice\n- Every Sunday, review the topics studied during the week.\n- Take quizzes or practice problems.\n- Work on small projects to reinforce learning.\n\n### Adjustments\n- **If you feel confident**: You can reduce the study time for that subject and increase focus on the next topic.\n- **If struggling**: Spend extra time on difficult topics and consider additional resources (books, videos, etc.).\n\n### Long-Term Planning\n- Aim to complete all foundational topics by December 2025.\n- Use January to February 2026 for in-depth projects or preparation for exams.\n- March 2026 should be reserved for revision and practice exams.\n\n### Conclusion\nThis study plan is flexible; feel free to adjust the hours and focus areas according to your progress and understanding of each subject. Remember to take breaks and ensure a balanced study routine to avoid burnout. Happy studying!"
+        }
+
+<!-- STUDY PLANNER END -->
+
+<!-- GENERATE QUIZ START -->
+
+    URL: POST http://localhost:5000/api/ai/generate-quiz
+
+    Headers:
+         Authorization: Bearer TOKEN
+        
+    BODY{JSON}:
+        {
+            "topic": "DBMS",
+            "numberOfQuestions": 5,
+            "difficulty": "easy"
+        }
+    
+    Expected:
+        STATUS CODE: 200
+
+        {
+            "success":true,
+            "data":"Here are 5 multiple-choice questions (MCQs) on the topic of Operating Systems, along with their correct answers:\n\n### Question 1:\nWhich of the following is NOT a function of an operating system?\n\nA) Memory management  \nB) Process scheduling  \nC) Data encryption  \nD) Device management  \n\n**Answer:** C) Data encryption\n\n---\n\n### Question 2:\nIn a multi-user operating system, which of the following is a primary responsibility of the OS?\n\nA) Providing internet access  \nB) Managing user accounts and permissions  \nC) Compiling programs  \nD) Displaying graphics  \n\n**Answer:** B) Managing user accounts and permissions\n\n---\n\n### Question 3:\nWhat does the term \"deadlock\" refer to in the context of operating systems?\n\nA) A situation where a process is waiting for a resource that is held by another process  \nB) A method of managing memory allocation  \nC) The process of loading an OS into memory  \nD) A system crash due to hardware failure  \n\n**Answer:** A) A situation where a process is waiting for a resource that is held by another process\n\n---\n\n### Question 4:\nWhich of the following scheduling algorithms can lead to starvation?\n\nA) Round Robin  \nB) First-Come, First-Served  \nC) Shortest Job Next  \nD) Priority Scheduling  \n\n**Answer:** D) Priority Scheduling\n\n---\n\n### Question 5:\nWhat is the purpose of a system call in an operating system?\n\nA) To provide a graphical user interface  \nB) To allow user programs to request services from the OS  \nC) To execute user commands directly  \nD) To manage hardware resources  \n\n**Answer:** B) To allow user programs to request services from the OS\n\n--- \n\nFeel free to use these questions for educational purposes or assessments!"
+        }
+<!-- GENERATE QUIZ END-->
+
+<!-- TRANSLATE START -->
+    
+    URL: POST http://localhost:5000/api/ai/translate
+
+    Headers:
+         Authorization: Bearer TOKEN
+
+    BODY{JSON}:
+       {
+            "text": "The statement The C programming is faster than other programming languages can be translated into a more structured and grammatically correct form as follows C programming is faster than other programming languages.If you meant to request something different by using undefined,please clarify so I can assist you accordingly!",
+            "targetLanguage": "Tamil"
+        }
+    
+    Expected:
+        STATUS CODE: 200
+        {
+            "success":true,
+            "data":"..."
+        }
+<!-- TRANSLATE END -->
+
+<!-- SEMANTIC SEARCH START -->
+
+    URL : POST http://localhost:5000/api/ai/semantic-search
+
+    Header:
+        Authorization: Bearer TOKEN
+    
+    BODY{JSON}:
+        {
+            "query": "What is normalization in database?",
+            "documents": [
+                "Normalization reduces redundancy",
+                "Binary trees are data structures"
+            ]
+        }
+    
+    Expected:
+        STATUS CODE: 200
+
+        {
+            "success":true,
+            "data":"Normalization in databases is a process used to organize data to minimize redundancy and improve data integrity. It involves dividing a database into smaller, related tables and defining relationships between them. The main goals of normalization are to eliminate duplicate data, ensure data dependencies are properly enforced, and enhance the efficiency of data retrieval.\n\n### Key Concepts of Normalization:\n\n1. **Redundancy Reduction**: By structuring data into multiple related tables, normalization reduces the amount of duplicate information stored in the database.\n\n2. **Functional Dependency**: Normalization relies on the concept of functional dependency, which indicates that a column is dependent on another column. This helps in organizing data logically.\n\n3. **Normal Forms**: There are several levels (normal forms) of normalization, each with specific rules:\n   - **First Normal Form (1NF)**: Ensures that all columns contain atomic, indivisible values and that each entry in a column is unique.\n   - **Second Normal Form (2NF)**: Requires that the database is in 1NF and that all non-key attributes are fully functionally dependent on the primary key.\n   - **Third Normal Form (3NF)**: Requires that the database is in 2NF and that all the attributes are not only dependent on the primary key but also independent of each other.\n   - Higher normal forms (like BCNF and 4NF) address more complex scenarios of redundancy and dependency.\n\n### Benefits of Normalization:\n\n- **Improved Data Integrity**: Reduces the risk of anomalies (insert, update, and delete anomalies) that can occur when data is duplicated.\n- **Efficient Data Management**: Makes it easier to maintain and update data since changes need to be made in fewer places.\n- **Better Query Performance**: By organizing data logically, queries can be more efficient, especially when properly indexed.\n\n### Considerations:\n\nWhile normalization has many advantages, it's important to find a balance. Over-normalization can lead to complex queries and may impact performance negatively. In some cases, denormalization (the process of combining tables) might be employed for performance reasons in read-heavy applications.\n\n### Conclusion:\n\nNormalization is a fundamental concept in database design that helps in creating efficient, reliable, and maintainable databases. Understanding its principles is crucial for database administrators and developers to ensure optimal data management practices."
+        }
+<!-- SEMANTIC SEARCH END -->
