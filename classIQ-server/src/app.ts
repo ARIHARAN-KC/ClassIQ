@@ -5,6 +5,7 @@ import morgan from "morgan";
 import authRoutes from "./modules/auth/routes.js";
 import userRoutes from "./modules/users/userRoutes.js";
 import classRoutes from "./modules/classes/classRoutes.js";
+import streamRoutes from "./modules/streams/streamRoutes.js";
 import { globalErrorHandler } from "./middleware/error.js";
 
 const app = express();
@@ -25,6 +26,7 @@ app.get("/", (_req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/classes", classRoutes)
+app.use("/api", streamRoutes)
 
 // 404
 app.use((_req, res) => {

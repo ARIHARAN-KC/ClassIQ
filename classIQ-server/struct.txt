@@ -168,7 +168,7 @@ PUT /api/classes/:classId
 Delete Class
 DELETE /api/classes/:classId
 ________________________________________
-4. Classroom Stream APIs
+4. Classroom Stream APIs - Done
 Base: /api/streams
 Create Announcement
 POST /api/classes/:classId/streams

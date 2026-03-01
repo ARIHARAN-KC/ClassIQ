@@ -465,3 +465,84 @@ STEP 2:
 
 <!-- DELETE CLASS (TEACHER ONLY) END-->
 ===============================================================================================================================================
+
+<!-- STREAM END POINTS START (Teacher of that class can make StreamS) -->
+
+    URL: http://localhost:5000/api/classes/:classId/streams
+
+    EXAMPLE: POST http://localhost:5000/api/classes/69a303390ffa991b480a8470/streams
+
+    Headers
+        Authorization: Bearer YOUR_JWT_TOKEN
+    
+    BODY(JSON):
+        {
+        "content": "Tomorrow is project submission deadline."
+        }
+    
+    Expected:
+    STATUS CODE: 201
+
+    {
+        "success":true,
+        "data":{
+            "content":"Tomorrow is project submission deadline.",
+            "class":"69a303390ffa991b480a8470",
+            "author":"69a301f0461f3c007799e345",
+            "_id":"69a3cedf7f62e542b09d3c4a",
+            "createdAt":"2026-03-01T05:30:07.451Z",
+            "updatedAt":"2026-03-01T05:30:07.451Z",
+            "__v":0
+        }
+    }
+
+<!-- STREAM END POINTS END (Teacher of that class can make StreamS) -->
+
+<!-- GET ALL STREAMS START-->
+
+    URL: GET http://localhost:5000/api/classes/:classId/streams
+
+    EXAMPLE: GET http://localhost:5000/api/classes/69a303390ffa991b480a8470/streams
+
+    Headers:
+        Authorization: Bearer YOUR_JWT_TOKEN
+    
+    Expected:
+        STATUS CODE: 200
+
+        {
+            "success":true,
+            "data":[{
+                "_id":"69a3cedf7f62e542b09d3c4a",
+                "content":"Tomorrow is project submission deadline.",
+                "class":"69a303390ffa991b480a8470",
+                "author":{
+                    "_id":"69a301f0461f3c007799e345",
+                    "name":"Teacher02",
+                    "email":"teacher02@gmail.com"
+                    },
+                "createdAt":"2026-03-01T05:30:07.451Z",
+                "updatedAt":"2026-03-01T05:30:07.451Z",
+                "__v":0
+                }
+            ]
+        }
+
+<!-- GET ALL STREAMS END-->
+
+<!-- DELETE STREAM BY TEACHER START-->
+
+    URL: DELETE http://localhost:5000/api/streams/:streamId
+
+    Example: DELETE http://localhost:5000/api/streams/69a3cedf7f62e542b09d3c4a
+
+    Headers:
+        Authorization: Bearer YOUR_JWT_TOKEN
+
+    Expected:
+        STATUS CODE: 200
+        {
+            "success":true,
+            "message":"Stream deleted successfully"
+        }
+<!-- DELETE STREAM BY TEACHER END -->
