@@ -546,3 +546,254 @@ STEP 2:
             "message":"Stream deleted successfully"
         }
 <!-- DELETE STREAM BY TEACHER END -->
+
+==============================================================================================================================================
+
+<!-- CREATE THE ASSIGNMENT[ONLY BY TEACHER] START-->
+
+    URL: POST http://localhost:5000/api/classes/{classId}/assignments
+
+    Example: POST http://localhost:5000/api/classes/69a303390ffa991b480a8470/assignments
+
+    Headers:
+        Bearer <your_teacher_token>
+    
+    BODY[JSON]:
+    without attachment
+    {
+        "title": "ML-2",
+        "description": "Solve all",
+        "dueDate": "2026-03-10",
+        "totalMarks":"100"
+    }
+
+    with attachment - file upload 5 can upload
+     {
+        "title": "ML",
+        "description": "Solve exercises from Chapter",
+        "dueDate": "2026-03-10",
+        "totalMarks":"100",
+        files:path 
+    }
+                
+    Expected:
+        STATUS CODE: 201
+    without attachment
+    {
+        "success":true,
+        "data":{
+            "title":"ML-2",
+            "description":"Solve all ",
+            "dueDate":"2026-03-10T23:59:00.000Z",
+            "totalMarks":100,
+            "class":"69a303390ffa991b480a8470",
+            "createdBy":"69a301f0461f3c007799e345",
+            "attachments":[],
+            "_id":"69a3ea26bf30f8d5dccc21e8",
+            "createdAt":"2026-03-01T07:26:30.418Z",
+            "updatedAt":"2026-03-01T07:26:30.418Z",
+            "__v":0
+        }
+    }
+
+    with attachment
+    {
+        "success":true,
+        "data":{
+            "title":"ML",
+            "description":"Solve all from the upload doc",
+            "dueDate":"2026-03-10T23:59:00.000Z",
+            "totalMarks":100,
+            "class":"69a303390ffa991b480a8470",
+            "createdBy":"69a301f0461f3c007799e345",
+            "attachments":[
+                "/uploads/1772349837757-119922719.pdf",
+                "/uploads/1772349837761-486233368.jpeg",
+                "/uploads/1772349837762-717780689.pdf"
+            ],
+            "_id":"69a3e98dbf30f8d5dccc21e5",
+            "createdAt":"2026-03-01T07:23:57.948Z",
+            "updatedAt":"2026-03-01T07:23:57.948Z",
+            "__v":0
+        }
+    }
+<!-- CREATE THE ASSIGNMENT[ONLY BY TEACHER] END-->
+
+
+<!-- GET ALL ASSIGNMENT START-->
+
+    URL: GET http://localhost:5000/api/classes/{classId}/assignments
+
+    Example: GET http://localhost:5000/api/classes/69a303390ffa991b480a8470/assignments
+
+    Headers
+        Authorization: Bearer YOUR_TOKEN
+
+    Expected:
+    STATUS CODE: 200
+        {
+            "success":true,
+            "data":[{
+                "_id":"69a3ea26bf30f8d5dccc21e8",
+                "title":"ML-2",
+                "description":"Solve all ",
+                "dueDate":"2026-03-10T23:59:00.000Z",
+                "totalMarks":100,
+                "class":"69a303390ffa991b480a8470",
+                "createdBy":{
+                    "_id":"69a301f0461f3c007799e345",
+                    "name":"Teacher02",
+                    "email":"teacher02@gmail.com"
+                },
+                "attachments":[],
+                "createdAt":"2026-03-01T07:26:30.418Z",
+                "updatedAt":"2026-03-01T07:26:30.418Z",
+                "__v":0
+            },
+            {
+                "_id":"69a3e98dbf30f8d5dccc21e5",
+                "title":"ML",
+                "description":"Solve all from the upload doc",
+                "dueDate":"2026-03-10T23:59:00.000Z",
+                "totalMarks":100,
+                "class":"69a303390ffa991b480a8470",
+                "createdBy":{
+                    "_id":"69a301f0461f3c007799e345",
+                    "name":"Teacher02",
+                    "email":"teacher02@gmail.com"
+                },
+                "attachments":[
+                    "/uploads/1772349837757-119922719.pdf",
+                    "/uploads/1772349837761-486233368.jpeg",
+                    "/uploads/1772349837762-717780689.pdf"
+                ],
+                "createdAt":"2026-03-01T07:23:57.948Z",
+                "updatedAt":"2026-03-01T07:23:57.948Z",
+                "__v":0
+            },
+            {
+                "_id":"69a3e87dbf30f8d5dccc21e2",
+                "title":"ML",
+                "description":"Solve all exeicis",
+                "dueDate":"2026-03-10T23:59:00.000Z",
+                "totalMarks":100,
+                "class":"69a303390ffa991b480a8470",
+                "createdBy":{
+                    "_id":"69a301f0461f3c007799e345",
+                    "name":"Teacher02",
+                    "email":"teacher02@gmail.com"
+                },
+                "attachments":[],
+                "createdAt":"2026-03-01T07:19:25.582Z",
+                "updatedAt":"2026-03-01T07:19:25.582Z",
+                "__v":0
+            },{
+                "_id":"69a3e4cd3f6a5204c500f1d2",
+                "title":"Machine learning 1",
+                "description":"Solve all exercises from Chapter 1",
+                "dueDate":"2026-03-05T23:59:00.000Z",
+                "totalMarks":100,
+                "class":"69a303390ffa991b480a8470",
+                "createdBy":{
+                    "_id":"69a301f0461f3c007799e345",
+                    "name":"Teacher02",
+                    "email":"teacher02@gmail.com"
+                },
+                "attachments":[
+                    "https://example.com/ml.pdf"
+                ],
+                "createdAt":"2026-03-01T07:03:41.754Z",
+                "updatedAt":"2026-03-01T07:03:41.754Z",
+                "__v":0
+            }
+        ]
+    }
+<!-- GET ALL ASSIGNMENT END-->
+
+<!-- GET SINGLE ASSIGNMENT START -->
+
+    URL: GET http://localhost:5000/api/assignments/{assignmentId}
+
+    Example: GET http://localhost:5000/api/assignments/69a3ea26bf30f8d5dccc21e8
+
+    Headers
+        Authorization: Bearer YOUR_TOKEN
+
+    Expected:
+        STATUS CODE: 200
+        {
+            "success":true,
+            "data":{
+                "_id":"69a3ea26bf30f8d5dccc21e8",
+                "title":"ML-2",
+                "description":"Solve all ",
+                "dueDate":"2026-03-10T23:59:00.000Z",
+                "totalMarks":100,
+                "class":{
+                    "_id":"69a303390ffa991b480a8470"
+                },
+                "createdBy":{
+                    "_id":"69a301f0461f3c007799e345",
+                    "name":"Teacher02",
+                    "email":"teacher02@gmail.com"
+                },
+                "attachments":[],
+                "createdAt":"2026-03-01T07:26:30.418Z",
+                "updatedAt":"2026-03-01T07:26:30.418Z",
+                "__v":0
+            }
+        }
+<!-- GET SINGLE ASSIGNMENT END -->
+
+<!-- UPDATE THE ASSIGNMENT START -->
+
+    URL: PUT http://localhost:5000/api/assignments/{assignmentId}
+
+    Example: http://localhost:5000/api/assignments/69a3ea26bf30f8d5dccc21e8
+
+    Headers
+        Authorization: Bearer YOUR_TOKEN
+
+    BODY{JSON}:
+        {
+            "title": "Updated Math Homework",
+            "totalMarks": 150,
+            FILEDS  WHAT NEED TO UPDATE
+        }
+
+    Expected:
+    STATUS CODE: 200
+    {
+        "success":true,
+        "data":{
+            "_id":"69a3ea26bf30f8d5dccc21e8",
+            "title":"Updated ML Assignment",
+            "description":"Solve all ",
+            "dueDate":"2026-03-10T23:59:00.000Z",
+            "totalMarks":150,
+            "class":"69a303390ffa991b480a8470",
+            "createdBy":"69a301f0461f3c007799e345",
+            "attachments":[],
+            "createdAt":"2026-03-01T07:26:30.418Z",
+            "updatedAt":"2026-03-01T07:39:59.586Z",
+            "__v":0
+        }
+        }
+<!-- UPDATE THE ASSIGNMENT END -->
+
+<!-- DELETE ASSIGMENT [ONLY BY TEACHER] START-->
+
+    URL: DELETE http://localhost:5000/api/assignments/{assignmentId}
+
+    Example http://localhost:5000/api/assignments/69a3ea26bf30f8d5dccc21e8
+
+    Headers:
+        Authorization: Bearer YOUR_TOKEN
+    
+    Expected:
+    STATUS CODE: 200
+    {
+        "success":true,
+        "message":"Assignment deleted successfully"
+    }
+<!-- DELETE ASSIGMENT [ONLY BY TEACHER] END-->

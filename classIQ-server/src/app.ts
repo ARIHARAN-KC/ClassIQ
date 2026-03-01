@@ -1,11 +1,13 @@
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
+import path from "path";
 
 import authRoutes from "./modules/auth/routes.js";
 import userRoutes from "./modules/users/userRoutes.js";
 import classRoutes from "./modules/classes/classRoutes.js";
 import streamRoutes from "./modules/streams/streamRoutes.js";
+import assignmentRoutes from "./modules/assignment/assignmentRoutes.js";
 import { globalErrorHandler } from "./middleware/error.js";
 
 const app = express();
@@ -25,8 +27,12 @@ app.get("/", (_req, res) => {
 // Enable routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/classes", classRoutes)
-app.use("/api", streamRoutes)
+app.use("/api/classes", classRoutes);
+app.use("/api", streamRoutes);
+app.use("/api", assignmentRoutes);
+
+// File upload
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // 404
 app.use((_req, res) => {
