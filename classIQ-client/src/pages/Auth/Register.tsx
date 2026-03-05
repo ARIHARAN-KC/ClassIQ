@@ -31,7 +31,7 @@ export default function Register() {
     try {
       const res = await register(form);
       localStorage.setItem("token", res.data.data.token);
-      navigate(form.role === "teacher" ? "/teacher-dashboard" : "/student-dashboard");
+      navigate("/login");
     } catch (err: any) {
       setError(err.response?.data?.message || "Registration failed");
     } finally {

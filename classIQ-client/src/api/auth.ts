@@ -2,6 +2,18 @@ import axios from "axios";
 
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
+  headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` },
+});
+
+// Automatically attach token
+API.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
 });
 
 // --- Types ---
@@ -46,10 +58,13 @@ export const resetPassword = (data: { token: string; newPassword: string }) =>
   API.post<MessageResponse>("/auth/reset-password", data);
 
 export const getMe = (token: string) =>
-  API.get("/users/me", { headers: { Authorization: `Bearer ${token}` } });
+  API.get("/users/me");
+
+export const updateProfile = (data: { name?: string; email?: string }, token: string) =>
+  API.put("/users/me", data);
 
 export const teacherDashboard = (token: string) =>
-  API.get<MessageResponse>("/users/teacher-dashboard", { headers: { Authorization: `Bearer ${token}` } });
+  API.get<MessageResponse>("/users/teacher-dashboard");
 
 export const studentDashboard = (token: string) =>
-  API.get<MessageResponse>("/users/student-dashboard", { headers: { Authorization: `Bearer ${token}` } });
+  API.get<MessageResponse>("/users/student-dashboard");

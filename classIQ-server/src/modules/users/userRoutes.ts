@@ -10,8 +10,6 @@ const router = Router();
 router.get("/me", protect, userController.getMe);
 router.put("/me", protect, userController.updateMe);
 
-// Get user by ID (any logged-in user for now)
-router.get("/:id", protect, userController.getUserById);
 
 // Only teacher
 router.get(
@@ -28,5 +26,8 @@ router.get(
   authorize(ROLES.STUDENT),
   userController.studentDashboard
 );
+
+// Get user by ID (any logged-in user for now)
+router.get("/:id", protect, userController.getUserById);
 
 export default router;

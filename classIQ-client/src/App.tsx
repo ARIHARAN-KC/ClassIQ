@@ -6,6 +6,7 @@ import StudentDashboard from "./pages/Dashboards/StudentDashboard";
 import ForgotPassword from "./pages/Passwords/ForgotPassword";
 import ResetPassword from "./pages/Passwords/ResetPassword";
 import ProtectedRoute from "./components/ProtectedRoute";
+import UserProfile from "./pages/Profile/UserProfile";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/profile" element={<UserProfile />} />
 
         <Route
           path="/teacher-dashboard"

@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { teacherDashboard, logout } from "../../api/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function TeacherDashboard() {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [teacherData, setTeacherData] = useState<any>(null);
   const token = localStorage.getItem("token") || "";
+  const teacherName = localStorage.getItem("user_name");
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsLoading(true);
@@ -27,6 +30,10 @@ export default function TeacherDashboard() {
     localStorage.removeItem("token");
     window.location.href = "/login";
   };
+
+  const handleProfile = () => {
+    navigate("/profile");
+  }
 
   if (isLoading) {
     return (
@@ -84,12 +91,25 @@ export default function TeacherDashboard() {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Welcome back, Professor!</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Welcome back, {teacherName}!</h1>
               <p className="text-gray-600 mt-1">{message}</p>
             </div>
-            <div className="h-16 w-16 bg-indigo-100 rounded-full flex items-center justify-center">
-              <svg className="h-8 w-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div
+              onClick={handleProfile}
+              className="h-16 w-16 bg-indigo-100 rounded-full flex items-center justify-center cursor-pointer hover:bg-indigo-200 transition"
+            >
+              <svg
+                className="h-8 w-8 text-indigo-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
           </div>
