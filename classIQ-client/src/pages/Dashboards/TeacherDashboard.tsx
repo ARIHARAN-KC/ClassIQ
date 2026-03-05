@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { teacherDashboard, logout } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
+import CreateClass from "../Classes/Classes";
 
 export default function TeacherDashboard() {
   const [message, setMessage] = useState("");
@@ -8,6 +9,7 @@ export default function TeacherDashboard() {
   const [teacherData, setTeacherData] = useState<any>(null);
   const token = localStorage.getItem("token") || "";
   const teacherName = localStorage.getItem("user_name");
+  const [openCreateClass, setOpenCreateClass] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -117,11 +119,11 @@ export default function TeacherDashboard() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <button className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition duration-150 ease-in-out flex items-center justify-center space-x-2 group">
+          <button onClick={() => setOpenCreateClass(true)} className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition duration-150 ease-in-out flex items-center justify-center space-x-2 group">
             <svg className="h-5 w-5 text-indigo-600 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            <span className="text-sm font-medium text-gray-700">Create Course</span>
+            <span className="text-sm font-medium text-gray-700">Create Classes</span>
           </button>
           <button className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition duration-150 ease-in-out flex items-center justify-center space-x-2 group">
             <svg className="h-5 w-5 text-green-600 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -262,6 +264,11 @@ export default function TeacherDashboard() {
           </div>
         </div>
       </div>
+      <CreateClass
+        isOpen={openCreateClass}
+        onClose={() => setOpenCreateClass(false)}
+      />
     </div>
+
   );
 }
