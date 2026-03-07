@@ -201,7 +201,7 @@ PUT /api/submissions/:submissionId/grade
 Get My Submission
 GET /api/submissions/:submissionId
 ________________________________________
- 7. AI Feature APIs (OpenRouter Integration)
+ 7. AI Feature APIs (OpenRouter Integration) - Done
 Base: /api/ai
 ________________________________________
 1 AI ChatBot
@@ -253,13 +253,13 @@ GET /api/analytics/student/:studentId
 Deadline Risk Prediction
 GET /api/analytics/deadline-risk/:studentId
 ________________________________________
-9. Notifications APIs
+9. Notifications APIs - Later
 Base: /api/notifications
 GET    /api/notifications
 PUT    /api/notifications/:id/read
 DELETE /api/notifications/:id
 ________________________________________
-10. Calendar APIs
+10. Calendar APIs - Later
 Base: /api/calendar
 GET /api/calendar/events
 POST /api/calendar/events
