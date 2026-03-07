@@ -7,7 +7,10 @@ import ForgotPassword from "./pages/Passwords/ForgotPassword";
 import ResetPassword from "./pages/Passwords/ResetPassword";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UserProfile from "./pages/Profile/UserProfile";
-import CreateClass from "./pages/Classes/Classes";
+import ClassDetails from "./pages/Teachers/ClassDetails";
+import UpdateClass from "./pages/Teachers/UpdateClass";
+import AssignmentDetails from "./pages/Teachers/AssignmentDetails";
+import UpdateAssignment from "./pages/Teachers/UpdateAssignment";
 
 export default function App() {
   return (
@@ -19,7 +22,10 @@ export default function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/profile" element={<UserProfile />} />
-        <Route path="/create-class" element={<CreateClass />} />
+        <Route path="/classdetails/:id" element={<ClassDetails />} />
+        <Route path="/updateclass/:id" element={<UpdateClass />} />
+        <Route path="/assignmentdetails/:assignmentId" element={<AssignmentDetails />} />
+        <Route path="/updateassignment/:assignmentId" element={<UpdateAssignment />} />
 
         <Route
           path="/teacher-dashboard"

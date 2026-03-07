@@ -4,9 +4,10 @@ import { createClasses } from "../../api/classes";
 interface Props {
     isOpen: boolean;
     onClose: () => void;
+    refreshClasses: () => void;
 }
 
-export default function CreateClass({ isOpen, onClose }: Props) {
+export default function CreateClass({ isOpen, onClose, refreshClasses }: Props) {
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -26,6 +27,7 @@ export default function CreateClass({ isOpen, onClose }: Props) {
 
             setTitle("");
             setDescription("");
+            refreshClasses();
             onClose();
 
             console.log(res.data);

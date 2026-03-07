@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { teacherDashboard, logout } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
-import CreateClass from "../Classes/Classes";
+import CreateClass from "../Teachers/Classes";
+import { getClasses, deleteClass } from "../../api/classes";
+import type { Class } from "../../api/classes";
+import SelectClassModal from "../Teachers/SelectClassModal";
+import CreateAssignmentModal from "../Teachers/CreateAssignmentModal";
+
 
 export default function TeacherDashboard() {
   const [message, setMessage] = useState("");
@@ -10,6 +15,11 @@ export default function TeacherDashboard() {
   const token = localStorage.getItem("token") || "";
   const teacherName = localStorage.getItem("user_name");
   const [openCreateClass, setOpenCreateClass] = useState(false);
+  const [classes, setClasses] = useState<Class[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [openClassSelector, setOpenClassSelector] = useState(false);
+  const [openCreateAssignment, setOpenCreateAssignment] = useState(false);
+  const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,6 +36,35 @@ export default function TeacherDashboard() {
         setIsLoading(false);
       });
   }, [token]);
+
+
+  const fetchClasses = async () => {
+    try {
+      setLoading(true);
+      const res = await getClasses();
+      setClasses(res.data.data);
+    } catch (err) {
+      console.error("Error fetching classes", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteClass = async (id: string) => {
+    try {
+      const res = await deleteClass(id);
+      alert("Class deleted successfully");
+      setClasses((prev) =>
+        prev.filter((course) => course._id !== id)
+      );
+    } catch (err) {
+      alert("class deletion failed");
+    }
+  }
+
+  useEffect(() => {
+    fetchClasses();
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -125,7 +164,7 @@ export default function TeacherDashboard() {
             </svg>
             <span className="text-sm font-medium text-gray-700">Create Classes</span>
           </button>
-          <button className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition duration-150 ease-in-out flex items-center justify-center space-x-2 group">
+          <button onClick={() => setOpenClassSelector(true)} className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition duration-150 ease-in-out flex items-center justify-center space-x-2 group">
             <svg className="h-5 w-5 text-green-600 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
@@ -150,33 +189,95 @@ export default function TeacherDashboard() {
           {/* Courses Card */}
           <div className="lg:col-span-2 space-y-6">
             {/* Active Courses */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">Active Courses</h3>
-                <a href="#" className="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center">
-                  View all
-                  <svg className="h-4 w-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </a>
-              </div>
-              <div className="space-y-4">
-                {[1, 2, 3].map((course) => (
-                  <div key={course} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition cursor-pointer">
-                    <div className="flex items-center space-x-4">
-                      <div className="h-12 w-12 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 font-semibold">
-                        CS{course}01
-                      </div>
-                      <div>
-                        <p className="font-medium text-gray-900">Introduction to Programming {course}</p>
-                        <p className="text-sm text-gray-500">24 students • Mon/Wed 10:00 AM</p>
-                      </div>
-                    </div>
-                    <span className="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
-                      Active
-                    </span>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Courses Card */}
+              <div className="lg:col-span-2 space-y-6">
+
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      My Classes
+                    </h3>
+
+                    <a className="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center">
+                      View all
+                    </a>
                   </div>
-                ))}
+
+                  <div className="space-y-4">
+
+                    {loading ? (
+                      <p>Loading classes...</p>
+                    ) : classes.length === 0 ? (
+                      <p>No classes found</p>
+                    ) : (
+                      classes.map((course) => (
+
+                        <div
+                          key={course._id}
+                          className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition cursor-pointer"
+                        >
+
+                          <div className="flex items-center space-x-4">
+
+                            <div className="h-12 w-12 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 font-semibold">
+                              {course.title.substring(0, 2).toUpperCase()}
+                            </div>
+
+                            <div>
+                              <p className="font-medium text-gray-900">
+                                {course.title}
+                              </p>
+
+                              <p className="text-sm text-gray-500">
+                                {course.students.length} students • JoinCode: {course.joinCode}
+                              </p>
+                            </div>
+
+                          </div>
+                          <div className="flex items-center space-x-3">
+
+                            {/* View */}
+                            <button onClick={() => navigate(`/classdetails/${course._id}`)} className="text-blue-600 hover:text-blue-800">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                  d="M2.458 12C3.732 7.943 7.523 5 12 5
+      c4.477 0 8.268 2.943 9.542 7
+      -1.274 4.057-5.065 7-9.542 7
+      -4.477 0-8.268-2.943-9.542-7z"/>
+                              </svg>
+                            </button>
+
+                            {/* Edit */}
+                            <button onClick={() => navigate(`/updateclass/${course._id}`)} className="text-green-600 hover:text-green-800">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                  d="M11 5h2M12 7v10m0 0l-4-4m4 4l4-4" />
+                              </svg>
+                            </button>
+
+                            {/* Delete */}
+                            <button onClick={() => handleDeleteClass(course._id)} className="text-red-600 hover:text-red-800">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                  d="M6 7h12M9 7v10m6-10v10M4 7h16l-1 14H5L4 7z" />
+                              </svg>
+                            </button>
+
+                          </div>
+
+                        </div>
+
+                      ))
+                    )}
+
+                  </div>
+
+                </div>
+
               </div>
             </div>
 
@@ -267,6 +368,21 @@ export default function TeacherDashboard() {
       <CreateClass
         isOpen={openCreateClass}
         onClose={() => setOpenCreateClass(false)}
+        refreshClasses={fetchClasses}
+      />
+      <SelectClassModal
+        isOpen={openClassSelector}
+        onClose={() => setOpenClassSelector(false)}
+        onSelectClass={(classId) => {
+          setSelectedClassId(classId);
+          setOpenClassSelector(false);
+          setOpenCreateAssignment(true);
+        }}
+      />
+      <CreateAssignmentModal
+        classId={selectedClassId as string}
+        isOpen={openCreateAssignment}
+        onClose={() => setOpenCreateAssignment(false)}
       />
     </div>
 
