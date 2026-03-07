@@ -176,11 +176,11 @@ export default function TeacherDashboard() {
             </svg>
             <span className="text-sm font-medium text-gray-700">Manage Students</span>
           </button>
-          <button className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition duration-150 ease-in-out flex items-center justify-center space-x-2 group">
+          <button onClick={() => setCreateStreamOpen(true)} className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition duration-150 ease-in-out flex items-center justify-center space-x-2 group">
             <svg className="h-5 w-5 text-yellow-600 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
-            <span className="text-sm font-medium text-gray-700">Grade Submissions</span>
+            <span className="text-sm font-medium text-gray-700">Create Stream</span>
           </button>
         </div>
 

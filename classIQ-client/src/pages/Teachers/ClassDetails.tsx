@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getSingleClass } from "../../api/classes";
 import { getAssignmentsByClass, deleteAssignment } from "../../api/classes";
+import CreateStreamModal from "./CreateStreamModal";
 
 interface Teacher {
     _id: string;
@@ -42,6 +43,7 @@ export default function ClassDetails() {
     const [classData, setClassData] = useState<ClassData | null>(null);
     const [loading, setLoading] = useState(true);
     const [assignments, setAssignments] = useState<Assignment[]>([]);
+    const [createStreamOpen, setCreateStreamOpen] = useState(false);
 
     useEffect(() => {
 
@@ -147,9 +149,20 @@ export default function ClassDetails() {
             </div>
 
             {/* Assignments */}
-            <h2 className="text-xl font-semibold mt-10 mb-4">
-                Assignments ({assignments.length})
-            </h2>
+            <div className="flex items-center justify-between mt-10 mb-4">
+
+                <h2 className="text-xl font-semibold">
+                    Assignments ({assignments.length})
+                </h2>
+
+                <button
+                    onClick={() => setCreateStreamOpen(true)}
+                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow-md transition"
+                >
+                    + Create Stream
+                </button>
+
+            </div>
 
             <div className="overflow-x-auto">
                 <table className="min-w-full border border-gray-200 rounded-lg">
@@ -227,7 +240,12 @@ export default function ClassDetails() {
 
                 </table>
             </div>
-
+            <CreateStreamModal
+                classId={classData._id}
+                isOpen={createStreamOpen}
+                onClose={() => setCreateStreamOpen(false)}
+                onSuccess={() => { }}
+            />
         </div>
     );
 }
