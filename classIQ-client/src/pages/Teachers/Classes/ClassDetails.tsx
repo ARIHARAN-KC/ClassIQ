@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getSingleClass } from "../../api/classes";
-import { getAssignmentsByClass, deleteAssignment } from "../../api/classes";
-import CreateStreamModal from "./CreateStreamModal";
+import { getSingleClass } from "../../../api/classes";
+import { getAssignmentsByClass, deleteAssignment } from "../../../api/classes";
+import CreateStreamModal from "../CreateStreamModal";
+import { getStreams, deleteStream } from "../../../api/stream";
 
 interface Teacher {
     _id: string;
@@ -36,6 +37,12 @@ interface Assignment {
     createdAt: string;
 }
 
+interface Stream {
+    _id: string;
+    content: string;
+    createdAt: string;
+}
+
 export default function ClassDetails() {
 
     const { id } = useParams();
@@ -43,7 +50,17 @@ export default function ClassDetails() {
     const [classData, setClassData] = useState<ClassData | null>(null);
     const [loading, setLoading] = useState(true);
     const [assignments, setAssignments] = useState<Assignment[]>([]);
+    const [streams, setStreams] = useState<Stream[]>([]);
     const [createStreamOpen, setCreateStreamOpen] = useState(false);
+
+    const fetchStream = async () => {
+        try {
+            const res = await getStreams(id as string);
+            setStreams(res);
+        } catch (error) {
+            console.error("Error fetching streams", error);
+        }
+    };
 
     useEffect(() => {
 
@@ -67,7 +84,11 @@ export default function ClassDetails() {
 
         const loadData = async () => {
             setLoading(true);
-            await Promise.all([fetchClass(), fetchAssignments()]);
+            await Promise.all([
+                fetchClass(),
+                fetchAssignments(),
+                fetchStream()
+            ]);
             setLoading(false);
         };
 
@@ -87,8 +108,21 @@ export default function ClassDetails() {
         try {
             await deleteAssignment(assignmentId);
             setAssignments((prev) => prev.filter((a) => a._id !== assignmentId));
+            alert("Assignment deleted successfully!");
         } catch (error) {
             console.error("Error deleting assignment", error);
+        }
+    }
+
+    const handleDeleteStream = async (streamId: string) => {
+        try {
+            await deleteStream(streamId);
+            setStreams((prev) => prev.filter((s) => s._id !== streamId));
+            alert("Stream deleted successfully!");
+        } catch (error) {
+            console.error("Error deleting stream", error);
+        } finally {
+            fetchStream();
         }
     }
 
@@ -156,10 +190,10 @@ export default function ClassDetails() {
                 </h2>
 
                 <button
-                    onClick={() => setCreateStreamOpen(true)}
+                    onClick={() => navigate(`/assignment-submissions/${assignments[0]?._id}`)}
                     className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow-md transition"
                 >
-                    + Create Stream
+                    View Submissions
                 </button>
 
             </div>
@@ -240,11 +274,77 @@ export default function ClassDetails() {
 
                 </table>
             </div>
+
+            {/* Streams */}
+            <div className="flex items-center justify-between mt-10 mb-4">
+
+                <h2 className="text-xl font-semibold">
+                    Stream ({streams.length})
+                </h2>
+
+                <button
+                    onClick={() => setCreateStreamOpen(true)}
+                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow-md transition"
+                >
+                    + Create Stream
+                </button>
+
+            </div>
+
+            <div className="overflow-x-auto">
+                <table className="min-w-full border border-gray-200 rounded-lg">
+
+                    <thead className="bg-gray-100">
+                        <tr>
+                            <th className="p-3 text-left">Content</th>
+                            <th className="p-3 text-left">Created At</th>
+                            <th className="p-3 text-left">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {streams.map((s) => (
+                            <tr key={s._id} className="border-t">
+
+                                <td className="p-3">{s.content}</td>
+
+                                <td className="p-3">
+                                    {new Date(s.createdAt).toLocaleDateString()}
+                                </td>
+
+                                <td className="p-3 space-x-2">
+
+                                    <button
+                                        onClick={() => handleDeleteStream(s._id)}
+                                        className="bg-red-500 text-white px-3 py-1 rounded"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </td>
+
+                            </tr>
+                        ))}
+
+                        {streams.length === 0 && (
+                            <tr>
+                                <td colSpan={3} className="text-center p-4 text-gray-500">
+                                    No streams found
+                                </td>
+                            </tr>
+                        )}
+
+                    </tbody>
+
+                </table>
+            </div>
+
             <CreateStreamModal
                 classId={classData._id}
                 isOpen={createStreamOpen}
                 onClose={() => setCreateStreamOpen(false)}
-                onSuccess={() => { }}
+                onSuccess={fetchStream}
             />
         </div>
     );

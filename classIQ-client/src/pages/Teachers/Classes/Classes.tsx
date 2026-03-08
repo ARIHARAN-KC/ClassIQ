@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createClasses } from "../../api/classes";
+import { createClasses } from "../../../api/classes";
 
 interface Props {
     isOpen: boolean;

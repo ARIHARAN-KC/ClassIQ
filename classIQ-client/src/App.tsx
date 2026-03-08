@@ -7,10 +7,12 @@ import ForgotPassword from "./pages/Passwords/ForgotPassword";
 import ResetPassword from "./pages/Passwords/ResetPassword";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UserProfile from "./pages/Profile/UserProfile";
-import ClassDetails from "./pages/Teachers/ClassDetails";
-import UpdateClass from "./pages/Teachers/UpdateClass";
-import AssignmentDetails from "./pages/Teachers/AssignmentDetails";
-import UpdateAssignment from "./pages/Teachers/UpdateAssignment";
+import ClassDetails from "./pages/Teachers/Classes/ClassDetails";
+import UpdateClass from "./pages/Teachers/Classes/UpdateClass";
+import AssignmentDetails from "./pages/Teachers/Assignments/AssignmentDetails";
+import UpdateAssignment from "./pages/Teachers/Assignments/UpdateAssignment";
+import JoinedClassesPage from "./pages/Students/JoinedClasses";
+import AssignmentSubmissionsPage from "./pages/Teachers/Assignments/StudentsAssignments";
 
 export default function App() {
   return (
@@ -26,6 +28,8 @@ export default function App() {
         <Route path="/updateclass/:id" element={<UpdateClass />} />
         <Route path="/assignmentdetails/:assignmentId" element={<AssignmentDetails />} />
         <Route path="/updateassignment/:assignmentId" element={<UpdateAssignment />} />
+        <Route path="/joined-classes" element={<JoinedClassesPage />} />
+        <Route path="/assignment-submissions/:assignmentId" element={<AssignmentSubmissionsPage />} />
 
         <Route
           path="/teacher-dashboard"

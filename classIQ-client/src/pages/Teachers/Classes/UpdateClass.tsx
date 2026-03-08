@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { updateClass } from "../../api/classes";
+import { updateClass } from "../../../api/classes";
 
 const UpdateClass: React.FC = () => {
     const { id } = useParams<{ id: string }>();

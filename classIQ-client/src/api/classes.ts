@@ -70,6 +70,9 @@ export const createAssignment = (
 export const getClasses = () =>
     API.get<ClassesResponse>("/classes");
 
+export const joinClass = (joinCode: string) =>
+    API.post("/classes/join", { joinCode });
+
 export const getSingleClass = (classId: string) => {
     return API.get(`/classes/${classId}`, {
     });
@@ -83,7 +86,7 @@ export const updateClass = async (
     });
 };
 
-export const deleteClass = (id : string) => {
+export const deleteClass = (id: string) => {
     return API.delete(`classes/${id}`);
 }
 
@@ -102,3 +105,22 @@ export const updateAssignment = async (assignmentId: string, data: { title?: str
 export const deleteAssignment = (assignmentId: string) => {
     return API.delete(`/assignments/${assignmentId}`);
 }
+
+export const submitAssignment = (assignmentId: string, formData: FormData) => {
+    return API.post(`/assignments/${assignmentId}/submissions`, formData, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    });
+};
+
+export const getSubmissionsByAssignment = (assignmentId: string) => {
+    return API.get(`/assignments/${assignmentId}/submissions`);
+};
+
+export const gradeSubmission = (
+    submissionId: string,
+    data: { marksObtained: number; feedback: string }
+) => {
+    return API.put(`/submissions/${submissionId}/grade`, data);
+};

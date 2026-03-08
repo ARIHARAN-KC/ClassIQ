@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getSingleAssignment } from "../../api/classes";
+import { getSingleAssignment } from "../../../api/classes";
 
 interface Teacher {
     _id: string;

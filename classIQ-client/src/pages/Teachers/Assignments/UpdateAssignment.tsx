@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getSingleAssignment, updateAssignment } from "../../api/classes";
+import { getSingleAssignment, updateAssignment } from "../../../api/classes";
 import { FileText, CalendarDays, Hash, Save, ArrowLeft } from "lucide-react";
 
 interface Assignment {

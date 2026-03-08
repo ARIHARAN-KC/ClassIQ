@@ -20,7 +20,7 @@ const CreateStreamModal: React.FC<Props> = ({ classId, isOpen, onClose, onSucces
             setLoading(true);
 
             await createStream(classId, content);
-
+            alert("Stream created successfully!");
             setContent("");
             onSuccess();
             onClose();

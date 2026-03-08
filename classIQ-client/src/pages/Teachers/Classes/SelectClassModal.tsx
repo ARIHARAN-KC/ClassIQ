@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getClasses } from "../../api/classes";
-import CreateAssignmentModal from "./CreateAssignmentModal";
+import { getClasses } from "../../../api/classes";
+// import CreateAssignmentModal from "./Assignments/CreateAssignmentModal";
 
 interface ClassType {
     _id: string;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { createAssignment } from "../../api/classes";
+import { createAssignment } from "../../../api/classes";
 
 interface Props {
     classId: string;
