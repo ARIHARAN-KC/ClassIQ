@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { studentDashboard, logout } from "../../api/auth";
 import JoinClassModal from "../Students/JoinClassModal";
 import { getClasses } from "../../api/classes";
+import AIChatBot from "../../components/AIChatBot";
 
 interface ClassItem {
   _id: string;
@@ -16,6 +17,7 @@ export default function StudentDashboard() {
   const [studentData, setStudentData] = useState<any>(null);
   const [joinOpen, setJoinOpen] = useState(false);
   const token = localStorage.getItem("token") || "";
+  const [openAIChat, setOpenAIChat] = useState(false);
   const [classes, setClasses] = useState<ClassItem[]>([]);
 
 
@@ -243,6 +245,40 @@ export default function StudentDashboard() {
           </div>
         </div>
       </div>
+
+
+      {/* AI Chat Bubble */}
+      <div className="fixed bottom-6 right-6 z-50">
+
+        {/* Chat Window */}
+        {openAIChat && (
+          <div className="mb-3 w-[380px] h-[500px] bg-white rounded-2xl shadow-2xl border">
+
+            {/* Close button */}
+            <div className="flex justify-end p-2 border-b">
+              <button
+                onClick={() => setOpenAIChat(false)}
+                className="text-gray-500 hover:text-red-500"
+              >
+                ✕
+              </button>
+            </div>
+
+            <AIChatBot />
+
+          </div>
+        )}
+
+        {/* Bubble Button */}
+        <button
+          onClick={() => setOpenAIChat(!openAIChat)}
+          className="h-14 w-14 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg hover:bg-indigo-700 transition"
+        >
+          💬
+        </button>
+
+      </div>
+
       <JoinClassModal
         isOpen={joinOpen}
         onClose={() => setJoinOpen(false)}
