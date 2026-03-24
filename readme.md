@@ -101,7 +101,7 @@ Before running this project, make sure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/ARIHARAN-KC/ClassIQ.git
 cd classiq
 ```
 
