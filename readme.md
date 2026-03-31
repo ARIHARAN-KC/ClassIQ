@@ -132,22 +132,48 @@ VITE_API_URL=http://localhost:5000
 Create a `.env` file in the `classIQ-server` directory:
 
 ```env
+This is sample env
+# Application
+NODE_ENV=production
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/classiq
-JWT_SECRET=your_jwt_secret_key
-JWT_EXPIRE=7d
+FRONTEND_URL=http://localhost:5173
 
-# OpenRouter Configuration
-OPENROUTER_API_KEY=your_openrouter_api_key
+# CORS Configuration
+CORS_ORIGIN=http://localhost:5173
 
-# Email Configuration (for password reset)
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASSWORD=your_email_password
+# MongoDB
+MONGO_URI=mongodb+srv://username:password@cluster0.mongodb.net/classiq?retryWrites=true&w=majority
 
-# Frontend URL
-CLIENT_URL=http://localhost:5173
+# JWT
+JWT_SECRET=your_super_secret_jwt_key_here
+JWT_EXPIRES_IN=30d
+
+# AI Models (OpenRouter)
+OPENROUTER_API_KEY=your_openrouter_api_key_here
+OPENROUTER_MODEL=your-model
+# SMTP (Gmail Example)
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASSWORD=your_app_password_here
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+
+# Google Drive Storage (OAuth2)
+GOOGLE_CLIENT_ID=your_google_client_id_here.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your_google_client_secret_here
+GOOGLE_REDIRECT_URI=http://localhost:5000/api/...here
+GOOGLE_REFRESH_TOKEN=your_google_refresh_token_here
+GOOGLE_DRIVE_FOLDER_ID=your_google_drive_folder_id_here
+
+# Rate Limiting
+RATE_LIMIT_WINDOW_MS=500000
+RATE_LIMIT_MAX_REQUESTS=20
+
+# File Upload
+MAX_FILE_SIZE_MB=50
+ALLOWED_FILE_TYPES=application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png,image/webp,application/zip,application/x-zip-compressed
+
+# Security
+BCRYPT_ROUNDS=90
 ```
 
 ### 4. Run the Application
