@@ -5,13 +5,17 @@ export const findUserByEmail = async (email: string) => {
   return User.findOne({ email });
 };
 
+export const findUserByEmailWithPassword = async (email: string) => {
+  return User.findOne({ email }).select("+password");
+};
+
 export const createUser = async (data: RegisterInput) => {
   return User.create(data);
 };
 
-export const findUserByResetToken = async (token: string) => {
+export const findUserByResetToken = async (hashedToken: string) => {
   return User.findOne({
-    resetPasswordToken: token,
-    resetPasswordExpires: { $gt: new Date() }
-  });
+    resetPasswordToken: hashedToken,
+    resetPasswordExpires: { $gt: new Date() },
+  }).select("+password");
 };

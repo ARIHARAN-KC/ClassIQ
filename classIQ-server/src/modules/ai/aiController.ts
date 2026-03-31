@@ -1,132 +1,415 @@
-import fs from "fs";
-import mammoth from "mammoth"; // DOC/DOCX
-import type { Request, Response } from "express";
+import type { Request, Response, NextFunction } from "express";
+
 import * as ai from "./aiService.js";
-import PDFParser from "pdf2json";
+import { ApiError } from "../../utils/ApiError.js";
+import { ApiResponse } from "../../utils/ApiResponse.js";
+import { asyncHandler } from "../../middleware/error.js";
+import { logSecurityEvent } from "../../utils/logger.js";
+import { extractTextFromFileBuffer } from "./aiHelpers.js";
 
-// Safe decode helper
-function safeDecodeURIComponent(text: string): string {
-  try {
-    return decodeURIComponent(text);
-  } catch (err) {
-    // If malformed, just return original string
-    return text;
+export const chat = asyncHandler(async (req: Request, res: Response) => {
+  if (!req.user) throw new ApiError(401, "Unauthorized");
+
+  const { message } = req.body;
+
+  if (!message || typeof message !== "string") {
+    throw new ApiError(400, "Message is required");
   }
-}
 
-// Extract text from PDF using pdf2json
-async function extractTextFromPDF(filePath: string): Promise<string> {
-  // Dynamic import outside Promise
-  const PDFParserModule = await import("pdf2json");
-  const PDFParser = PDFParserModule.default;
+  if (message.trim().length < 2) {
+    throw new ApiError(400, "Message must be at least 2 characters");
+  }
 
-  return new Promise((resolve, reject) => {
-    const pdfParser = new PDFParser();
+  if (message.trim().length > 5000) {
+    throw new ApiError(400, "Message exceeds maximum length (5000 chars)");
+  }
 
-    pdfParser.on("pdfParser_dataError", err => reject(err));
+  const result = await ai.chatService(message.trim());
 
-    pdfParser.on("pdfParser_dataReady", pdfData => {
-      let text = "";
-
-      if (pdfData?.Pages) {
-        pdfData.Pages.forEach((page: any) => {
-          page.Texts.forEach((t: any) => {
-            t.R.forEach((r: any) => {
-              text += safeDecodeURIComponent(r.T) + " ";
-            });
-          });
-          text += "\n";
-        });
-      }
-
-      resolve(text);
-    });
-
-    pdfParser.loadPDF(filePath);
+  logSecurityEvent("AI_CHAT", req.user.id, "User used AI chat", {
+    length: message.trim().length,
   });
-}
-// Extract text from any supported file
-async function extractTextFromFile(filePath: string, mimetype: string): Promise<string> {
-  if (mimetype === "application/pdf") {
-    return await extractTextFromPDF(filePath);
-  } else if (
-    mimetype === "application/msword" ||
-    mimetype ===
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-  ) {
-    const result = await mammoth.extractRawText({ path: filePath });
-    return result.value;
-  } else {
-    throw new Error("Unsupported file type for text extraction");
+
+  res.json(new ApiResponse(200, "Chat response generated", result));
+});
+
+export const classSummary = asyncHandler(async (req: Request, res: Response) => {
+  if (!req.user) throw new ApiError(401, "Unauthorized");
+
+  const { data } = req.body;
+
+  if (!data || typeof data !== "string") {
+    throw new ApiError(400, "Class data is required");
   }
-}
 
-// Ai chat
-export const chat = async (req: Request, res: Response) =>
-  res.json({ success: true, data: await ai.chatService(req.body.message) });
+  if (data.trim().length < 5) {
+    throw new ApiError(400, "Class data must be at least 5 characters");
+  }
 
-// Ai classSummary
-export const classSummary = async (req: Request, res: Response) =>
-  res.json({ success: true, data: await ai.classSummaryService(req.body.data) });
+  if (data.trim().length > 10000) {
+    throw new ApiError(400, "Class data exceeds maximum length (10000 chars)");
+  }
 
-// Ai generative assigment
-export const generateAssignment = async (req: Request, res: Response) =>
-  res.json({ success: true, data: await ai.generateAssignmentService(req.body.topic, req.body.grade, req.body.difficulty) });
+  const result = await ai.classSummaryService(data.trim());
 
-// Ai explain assignment
-export const explainAssignment = async (req: Request, res: Response) =>
-  res.json({ success: true, data: await ai.explainAssignmentService(req.body.text) });
+  logSecurityEvent("AI_CLASS_SUMMARY", req.user.id, "Generated class summary", {
+    length: data.trim().length,
+  });
 
-// ai submission summary
-export const submissionSummary = async (req: Request, res: Response) =>
-  res.json({ success: true, data: await ai.submissionSummaryService(req.body.text) });
+  res.json(new ApiResponse(200, "Class summary generated", result));
+});
 
-// ai generate notes
-export const generateNotes = async (req: any, res: Response) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ success: false, message: "File is required" });
+export const generateAssignment = asyncHandler(
+  async (req: Request, res: Response) => {
+    if (!req.user) throw new ApiError(401, "Unauthorized");
+
+    const { topic, grade, difficulty } = req.body;
+
+    if (!topic || !grade || !difficulty) {
+      throw new ApiError(400, "Topic, grade, and difficulty are required");
     }
 
-    const filePath = req.file.path;
-    const mimetype = req.file.mimetype;
+    if (typeof topic !== "string") {
+      throw new ApiError(400, "Topic must be a string");
+    }
 
-    // Extract text
-    const text = await extractTextFromFile(filePath, mimetype);
+    const trimmedTopic = topic.trim();
 
-    // Call AI service
-    const notes = await ai.generateNotesService(text);
+    if (trimmedTopic.length < 3 || trimmedTopic.length > 200) {
+      throw new ApiError(400, "Topic must be between 3 and 200 characters");
+    }
 
-    res.json({ success: true, data: notes });
-  } catch (err: any) {
-    res.status(500).json({ success: false, message: err.message });
+    const parsedGrade = parseInt(String(grade));
+    const validGrades = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+    if (!validGrades.includes(parsedGrade)) {
+      throw new ApiError(400, "Invalid grade level");
+    }
+
+    const validDifficulties = ["easy", "medium", "hard"];
+    const normalizedDifficulty = String(difficulty).toLowerCase().trim();
+
+    if (!validDifficulties.includes(normalizedDifficulty)) {
+      throw new ApiError(400, "Difficulty must be: easy, medium, or hard");
+    }
+
+    const result = await ai.generateAssignmentService(
+      trimmedTopic,
+      parsedGrade,
+      normalizedDifficulty
+    );
+
+    logSecurityEvent(
+      "AI_ASSIGNMENT_GENERATED",
+      req.user.id,
+      "Generated assignment",
+      {
+        topic: trimmedTopic,
+        grade: parsedGrade,
+        difficulty: normalizedDifficulty,
+      }
+    );
+
+    res.json(new ApiResponse(200, "Assignment generated", result));
   }
-};
+);
 
-// ai summarize text
-export const summarizeText = async (req: Request, res: Response) =>
-  res.json({ success: true, data: await ai.summarizeTextService(req.body.text) });
+export const explainAssignment = asyncHandler(
+  async (req: Request, res: Response) => {
+    if (!req.user) throw new ApiError(401, "Unauthorized");
 
-// ai analyze difficulty
-export const analyzeDifficulty = async (req: Request, res: Response) =>
-  res.json({ success: true, data: await ai.analyzeDifficultyService(req.body.text) });
+    const { text } = req.body;
 
-//  ai plagiarism check
-export const plagiarismCheck = async (req: Request, res: Response) =>
-  res.json({ success: true, data: await ai.plagiarismCheckService(req.body.text) });
+    if (!text || typeof text !== "string") {
+      throw new ApiError(400, "Text is required");
+    }
 
-// ai study planner
-export const studyPlanner = async (req: Request, res: Response) =>
-  res.json({ success: true, data: await ai.studyPlannerService(req.body.subjects, req.body.hours, req.body.examDate) });
+    if (text.trim().length < 5) {
+      throw new ApiError(400, "Text must be at least 5 characters");
+    }
 
-// ai generate quiz
-export const generateQuiz = async (req: Request, res: Response) =>
-  res.json({ success: true, data: await ai.generateQuizService(req.body.topic) });
+    if (text.trim().length > 10000) {
+      throw new ApiError(400, "Text exceeds maximum length (10000 chars)");
+    }
 
-// ai translate
-export const translate = async (req: Request, res: Response) =>
-  res.json({ success: true, data: await ai.translateService(req.body.text, req.body.language) });
+    const result = await ai.explainAssignmentService(text.trim());
 
-// ai semantic search
-export const semanticSearch = async (req: Request, res: Response) =>
-  res.json({ success: true, data: await ai.semanticSearchService(req.body.query, req.body.context) });
+    res.json(new ApiResponse(200, "Assignment explained", result));
+  }
+);
+
+export const submissionSummary = asyncHandler(
+  async (req: Request, res: Response) => {
+    if (!req.user) throw new ApiError(401, "Unauthorized");
+
+    const { text } = req.body;
+
+    if (!text || typeof text !== "string") {
+      throw new ApiError(400, "Submission text is required");
+    }
+
+    if (text.trim().length < 5) {
+      throw new ApiError(400, "Submission text must be at least 5 characters");
+    }
+
+    if (text.trim().length > 10000) {
+      throw new ApiError(400, "Text exceeds maximum length (10000 chars)");
+    }
+
+    const result = await ai.submissionSummaryService(text.trim());
+
+    res.json(new ApiResponse(200, "Submission summary generated", result));
+  }
+);
+
+export const generateNotes = asyncHandler(
+  async (req: Request, res: Response, _next: NextFunction) => {
+    if (!req.user) throw new ApiError(401, "Unauthorized");
+
+    if (!req.file) {
+      throw new ApiError(400, "File is required");
+    }
+
+    const { buffer, mimetype, originalname } = req.file;
+
+    if (!buffer || buffer.length === 0) {
+      throw new ApiError(400, "File is empty");
+    }
+
+    const extractedText = await extractTextFromFileBuffer(buffer, mimetype);
+
+    if (!extractedText || extractedText.trim().length < 5) {
+      throw new ApiError(400, "Not enough readable text in uploaded file");
+    }
+
+    if (extractedText.length > 50000) {
+      throw new ApiError(
+        400,
+        "File contains too much text (limit 50000 characters)"
+      );
+    }
+
+    logSecurityEvent(
+      "AI_NOTES_FILE_PROCESSED",
+      req.user.id,
+      "File processed for notes generation",
+      {
+        fileName: originalname,
+        mimeType: mimetype,
+        extractedLength: extractedText.length,
+      }
+    );
+
+    const notes = await ai.generateNotesService(extractedText.trim());
+
+    res.json(new ApiResponse(200, "Notes generated successfully", notes));
+  }
+);
+
+export const summarizeText = asyncHandler(
+  async (req: Request, res: Response) => {
+    if (!req.user) throw new ApiError(401, "Unauthorized");
+
+    const { text } = req.body;
+
+    if (!text || typeof text !== "string") {
+      throw new ApiError(400, "Text is required");
+    }
+
+    if (text.trim().length < 5) {
+      throw new ApiError(400, "Text must be at least 5 characters");
+    }
+
+    if (text.trim().length > 20000) {
+      throw new ApiError(400, "Text exceeds maximum length (20000 chars)");
+    }
+
+    const result = await ai.summarizeTextService(text.trim());
+
+    res.json(new ApiResponse(200, "Text summarized", result));
+  }
+);
+
+export const analyzeDifficulty = asyncHandler(
+  async (req: Request, res: Response) => {
+    if (!req.user) throw new ApiError(401, "Unauthorized");
+
+    const { text } = req.body;
+
+    if (!text || typeof text !== "string") {
+      throw new ApiError(400, "Text is required");
+    }
+
+    if (text.trim().length < 5) {
+      throw new ApiError(400, "Text must be at least 5 characters");
+    }
+
+    if (text.trim().length > 10000) {
+      throw new ApiError(400, "Text exceeds maximum length (10000 chars)");
+    }
+
+    const result = await ai.analyzeDifficultyService(text.trim());
+
+    res.json(new ApiResponse(200, "Difficulty analyzed", result));
+  }
+);
+
+export const plagiarismCheck = asyncHandler(
+  async (req: Request, res: Response) => {
+    if (!req.user) throw new ApiError(401, "Unauthorized");
+
+    const { text } = req.body;
+
+    if (!text || typeof text !== "string") {
+      throw new ApiError(400, "Text is required");
+    }
+
+    if (text.trim().length < 5) {
+      throw new ApiError(400, "Text must be at least 5 characters");
+    }
+
+    if (text.trim().length > 20000) {
+      throw new ApiError(400, "Text exceeds maximum length (20000 chars)");
+    }
+
+    const result = await ai.plagiarismCheckService(text.trim());
+
+    res.json(new ApiResponse(200, "Plagiarism check complete", result));
+  }
+);
+
+export const studyPlanner = asyncHandler(
+  async (req: Request, res: Response) => {
+    if (!req.user) throw new ApiError(401, "Unauthorized");
+
+    const { subjects, hours, examDate } = req.body;
+
+    if (!subjects || !Array.isArray(subjects) || subjects.length === 0) {
+      throw new ApiError(400, "Subjects must be a non-empty array");
+    }
+
+    if (subjects.length > 10) {
+      throw new ApiError(400, "Maximum 10 subjects allowed");
+    }
+
+    const cleanedSubjects = subjects.map((s) => String(s).trim());
+
+    for (const s of cleanedSubjects) {
+      if (!s || s.length < 2 || s.length > 100) {
+        throw new ApiError(
+          400,
+          "Each subject must be between 2 and 100 characters"
+        );
+      }
+    }
+
+    const parsedHours = Number(hours);
+
+    if (!parsedHours || isNaN(parsedHours) || parsedHours <= 0) {
+      throw new ApiError(400, "Hours must be a positive number");
+    }
+
+    if (parsedHours > 24) {
+      throw new ApiError(400, "Hours cannot exceed 24");
+    }
+
+    if (!examDate) {
+      throw new ApiError(400, "Exam date is required");
+    }
+
+    const examDateTime = new Date(examDate);
+
+    if (isNaN(examDateTime.getTime())) {
+      throw new ApiError(400, "Invalid exam date format");
+    }
+
+    if (examDateTime <= new Date()) {
+      throw new ApiError(400, "Exam date must be in the future");
+    }
+
+    const result = await ai.studyPlannerService(
+      cleanedSubjects,
+      parsedHours,
+      examDate
+    );
+
+    res.json(new ApiResponse(200, "Study planner generated", result));
+  }
+);
+
+export const generateQuiz = asyncHandler(
+  async (req: Request, res: Response) => {
+    if (!req.user) throw new ApiError(401, "Unauthorized");
+
+    const { topic } = req.body;
+
+    if (!topic || typeof topic !== "string") {
+      throw new ApiError(400, "Topic is required");
+    }
+
+    if (topic.trim().length < 2 || topic.trim().length > 200) {
+      throw new ApiError(400, "Topic must be between 2 and 200 characters");
+    }
+
+    const result = await ai.generateQuizService(topic.trim());
+
+    res.json(new ApiResponse(200, "Quiz generated", result));
+  }
+);
+
+export const translate = asyncHandler(async (req: Request, res: Response) => {
+  if (!req.user) throw new ApiError(401, "Unauthorized");
+
+  const { text, language } = req.body;
+
+  if (!text || !language) {
+    throw new ApiError(400, "Text and language are required");
+  }
+
+  if (typeof text !== "string" || typeof language !== "string") {
+    throw new ApiError(400, "Text and language must be strings");
+  }
+
+  if (text.trim().length < 2 || text.trim().length > 10000) {
+    throw new ApiError(400, "Text must be between 2 and 10000 characters");
+  }
+
+  if (language.trim().length < 2 || language.trim().length > 50) {
+    throw new ApiError(400, "Invalid language specified");
+  }
+
+  const result = await ai.translateService(text.trim(), language.trim());
+
+  res.json(new ApiResponse(200, "Translation completed", result));
+});
+
+export const semanticSearch = asyncHandler(
+  async (req: Request, res: Response) => {
+    if (!req.user) throw new ApiError(401, "Unauthorized");
+
+    const { query, context } = req.body;
+
+    if (!query || !context) {
+      throw new ApiError(400, "Query and context are required");
+    }
+
+    if (typeof query !== "string" || typeof context !== "string") {
+      throw new ApiError(400, "Query and context must be strings");
+    }
+
+    if (query.trim().length < 2 || query.trim().length > 500) {
+      throw new ApiError(400, "Query must be between 2 and 500 characters");
+    }
+
+    if (context.trim().length < 10 || context.trim().length > 20000) {
+      throw new ApiError(400, "Context must be between 10 and 20000 characters");
+    }
+
+    const result = await ai.semanticSearchService(
+      query.trim(),
+      context.trim()
+    );
+
+    res.json(new ApiResponse(200, "Semantic search complete", result));
+  }
+);

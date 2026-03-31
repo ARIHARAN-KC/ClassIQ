@@ -1,25 +1,35 @@
 import express from "express";
 import {
-    uploadSubmission,
-    getSubmissionsByAssignment,
-    gradeSubmission,
-    getSubmissionById,
+  uploadSubmission,
+  getSubmissionsByAssignment,
+  gradeSubmission,
+  getSubmissionById,
 } from "./submissionController.js";
+
 import { protect } from "../../middleware/auth.js";
 import { upload } from "../../middleware/upload.js";
 
 const router = express.Router();
 
 // Upload Submission
-router.post("/assignments/:assignmentId/submissions", protect, upload.array("files", 5), uploadSubmission);
+router.post(
+  "/assignments/:assignmentId/submissions",
+  protect,
+  upload.array("files", 5),
+  uploadSubmission
+);
 
 // Get All Submissions (Teacher)
-router.get("/assignments/:assignmentId/submissions", protect, getSubmissionsByAssignment);
+router.get(
+  "/assignments/:assignmentId/submissions",
+  protect,
+  getSubmissionsByAssignment
+);
 
-// Grade
+// Grade Submission
 router.put("/submissions/:submissionId/grade", protect, gradeSubmission);
 
-// Get Single
+// Get Single Submission
 router.get("/submissions/:submissionId", protect, getSubmissionById);
 
 export default router;

@@ -1,35 +1,24 @@
 import { Router } from "express";
 import {
-    createClass,
-    joinClass,
-    getAllClasses,
-    getClassById,
-    updateClass,
-    deleteClass,
+  createClass,
+  joinClass,
+  getAllClasses,
+  getClassById,
+  updateClass,
+  deleteClass,
 } from "./classController.js";
 
 import { protect } from "../../middleware/auth.js";
 import { authorize } from "../../middleware/role.js";
+import { ROLES } from "../../constants/roles.js";
 
 const router = Router();
 
-
-// Create Class
-router.post("/", protect, authorize("teacher"), createClass);
-
-// Join Class (via joinCode)
-router.post("/join", protect, authorize("student"), joinClass);
-
-// Get All Classes (Dashboard)
+router.post("/", protect, authorize(ROLES.TEACHER), createClass);
+router.post("/join", protect, authorize(ROLES.STUDENT), joinClass);
 router.get("/", protect, getAllClasses);
-
-//Get Single Class
 router.get("/:classId", protect, getClassById);
-
-//Update Class
-router.put("/:classId", protect, authorize("teacher"), updateClass);
-
-// Delete Class
-router.delete("/:classId", protect, authorize("teacher"), deleteClass);
+router.put("/:classId", protect, authorize(ROLES.TEACHER), updateClass);
+router.delete("/:classId", protect, authorize(ROLES.TEACHER), deleteClass);
 
 export default router;

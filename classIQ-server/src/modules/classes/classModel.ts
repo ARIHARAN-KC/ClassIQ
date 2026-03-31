@@ -6,6 +6,8 @@ export interface IClass extends Document {
   teachers: mongoose.Types.ObjectId[];
   students: mongoose.Types.ObjectId[];
   joinCode: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const classSchema = new Schema<IClass>(
@@ -14,11 +16,14 @@ const classSchema = new Schema<IClass>(
       type: String,
       required: true,
       trim: true,
+      minlength: 3,
+      maxlength: 100,
     },
 
     description: {
       type: String,
       trim: true,
+      maxlength: 2000,
     },
 
     teachers: [
@@ -26,6 +31,7 @@ const classSchema = new Schema<IClass>(
         type: Schema.Types.ObjectId,
         ref: "User",
         required: true,
+        index: true,
       },
     ],
 
@@ -33,6 +39,7 @@ const classSchema = new Schema<IClass>(
       {
         type: Schema.Types.ObjectId,
         ref: "User",
+        index: true,
       },
     ],
 
@@ -40,9 +47,14 @@ const classSchema = new Schema<IClass>(
       type: String,
       required: true,
       unique: true,
+      uppercase: true,
+      trim: true,
     },
   },
   { timestamps: true }
 );
 
-export default mongoose.model<IClass>("Class", classSchema);
+const Class =
+  mongoose.models.Class || mongoose.model<IClass>("Class", classSchema);
+
+export default Class;

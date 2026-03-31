@@ -6,12 +6,11 @@ import * as userController from "./userController.js";
 
 const router = Router();
 
-// Logged-in user
+// Logged-in user routes
 router.get("/me", protect, userController.getMe);
 router.put("/me", protect, userController.updateMe);
 
-
-// Only teacher
+// Dashboards
 router.get(
   "/teacher-dashboard",
   protect,
@@ -19,7 +18,6 @@ router.get(
   userController.teacherDashboard
 );
 
-// Only student
 router.get(
   "/student-dashboard",
   protect,
@@ -27,7 +25,7 @@ router.get(
   userController.studentDashboard
 );
 
-// Get user by ID (any logged-in user for now)
+// Get user by ID
 router.get("/:id", protect, userController.getUserById);
 
 export default router;

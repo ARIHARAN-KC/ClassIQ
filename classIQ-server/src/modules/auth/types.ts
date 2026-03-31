@@ -1,4 +1,4 @@
-export type UserRole = "teacher" | "student";
+export type UserRole = "teacher" | "student" | "admin";
 
 export interface RegisterInput {
   name: string;
@@ -10,6 +10,10 @@ export interface RegisterInput {
 export interface LoginInput {
   email: string;
   password: string;
+}
+
+export interface ForgotPasswordInput {
+  email: string;
 }
 
 export interface ResetPasswordInput {

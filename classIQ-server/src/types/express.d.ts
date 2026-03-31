@@ -1,11 +1,15 @@
-import { Request } from "express";
-import { IUser } from "../modules/users/userModel.ts";
+export {};
 
-declare module "express-serve-static-core" {
-  interface Request {
-    user?: {
+declare global {
+  namespace Express {
+    interface UserPayload {
       id: string;
-      role: string;
-    };
+      role: "teacher" | "student" | "admin";
+    }
+
+    interface Request {
+      user?: UserPayload;
+      requestId?: string;
+    }
   }
 }
