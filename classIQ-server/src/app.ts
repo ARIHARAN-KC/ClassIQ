@@ -18,7 +18,6 @@ import {
   apiLimiter,
   authLimiter,
   helmetConfig,
-  sanitizeInputs,
   requestIdMiddleware,
   securityHeaders,
 } from "./middleware/security.js";
@@ -27,13 +26,13 @@ import { requestLogger } from "./utils/logger.js";
 
 const app = express();
 
-// Required for deployments behind reverse proxies (Render, Railway, Nginx)
+// Required for deployments behind reverse proxies
 app.set("trust proxy", 1);
 
 // Security middleware
+app.use(requestIdMiddleware);
 app.use(helmetConfig);
 app.use(securityHeaders);
-app.use(requestIdMiddleware);
 
 // CORS
 app.use(cors(corsConfig));
@@ -42,8 +41,6 @@ app.use(cors(corsConfig));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-// Sanitization
-app.use(sanitizeInputs);
 
 // Logging
 if (process.env.NODE_ENV === "development") {
@@ -73,6 +70,7 @@ app.get(
 app.use("/api/auth/login", authLimiter);
 app.use("/api/auth/register", authLimiter);
 app.use("/api/auth/forgot-password", authLimiter);
+app.use("/api/auth/reset-password", authLimiter);
 
 // Routes
 app.use("/api/auth", authRoutes);

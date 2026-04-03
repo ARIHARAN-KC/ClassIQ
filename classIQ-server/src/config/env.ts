@@ -17,6 +17,10 @@ const requiredEnvVars = [
   "GOOGLE_DRIVE_FOLDER_ID",
 ];
 
+// Only require Drive vars if using file upload features
+const driveRequired = process.env.USE_DRIVE === "true" || process.env.NODE_ENV === "production";
+const driveVars = ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "GOOGLE_REFRESH_TOKEN", "GOOGLE_DRIVE_FOLDER_ID"];
+
 const missingEnvVars = requiredEnvVars.filter((key) => !process.env[key]);
 
 if (missingEnvVars.length > 0) {
@@ -26,6 +30,14 @@ if (missingEnvVars.length > 0) {
     throw new Error(
       `Missing critical environment variables: ${missingEnvVars.join(", ")}`
     );
+  }
+}
+
+// Drive-specific warning
+if (driveRequired) {
+  const missingDrive = driveVars.filter((key) => !process.env[key]);
+  if (missingDrive.length) {
+    console.warn(`Drive features limited. Missing: ${missingDrive.join(", ")}`);
   }
 }
 

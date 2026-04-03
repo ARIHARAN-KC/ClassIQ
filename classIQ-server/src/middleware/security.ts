@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
-import mongoSanitize from "express-mongo-sanitize";
 import crypto from "crypto";
 import { env } from "../config/env.js";
 
@@ -58,11 +57,53 @@ export const helmetConfig = helmet({
       : false,
 });
 
-export const sanitizeInputs = mongoSanitize({
-  replaceWith: "_",
-});
+// Custom MongoDB sanitization to avoid read-only query issues
+const sanitizeObject = (obj: any): any => {
+  if (obj === null || typeof obj !== "object") return obj;
+  
+  if (Array.isArray(obj)) {
+    return obj.map(item => sanitizeObject(item));
+  }
+  
+  const sanitized: any = {};
+  for (const [key, value] of Object.entries(obj)) {
+    // Replace $ and . to prevent MongoDB operator injection
+    let sanitizedKey = key.replace(/\$/g, '_').replace(/\./g, '_');
+    sanitized[sanitizedKey] = sanitizeObject(value);
+  }
+  return sanitized;
+};
 
-export const requestIdMiddleware = ( req: Request, _res: Response, next: NextFunction ) => {
+export const sanitizeInputs = (req: Request, _res: Response, next: NextFunction) => {
+  // Sanitize body (mutable)
+  if (req.body) {
+    req.body = sanitizeObject(req.body);
+  }
+  
+  // Sanitize query (read-only workaround)
+  if (req.query && Object.keys(req.query).length > 0) {
+    const originalQuery = { ...req.query };
+    // Clear existing properties
+    for (const key of Object.keys(req.query)) {
+      delete req.query[key];
+    }
+    // Assign sanitized values
+    Object.assign(req.query, sanitizeObject(originalQuery));
+  }
+  
+  // Sanitize params (read-only workaround)
+  if (req.params && Object.keys(req.params).length > 0) {
+    const originalParams = { ...req.params };
+    for (const key of Object.keys(req.params)) {
+      delete req.params[key];
+    }
+    Object.assign(req.params, sanitizeObject(originalParams));
+  }
+  
+  next();
+};
+
+export const requestIdMiddleware = (req: Request, _res: Response, next: NextFunction) => {
   const incoming = req.headers["x-request-id"];
 
   req.requestId =

@@ -50,7 +50,7 @@ export const logInfo = (message: string, data?: any) => {
     data,
   };
 
-  console.log("INFO:", message, data);
+  console.log("INFO:", message, data); //Need to cmd on production
   writeToFile("app.log", entry);
 };
 
@@ -83,7 +83,7 @@ export const logSecurityEvent = (
     data: { details, ...data },
   };
 
-  console.log("SECURITY:", entry.message);
+  console.log("SECURITY:", entry.message); //Need to cmd on production
   writeToFile("security-audit.log", entry);
 };
 

@@ -17,12 +17,10 @@ export const protect = (req: Request, _res: Response, next: NextFunction) => {
 
   try {
     const decoded = verifyToken(token);
-
     req.user = {
       id: decoded.id,
       role: decoded.role,
     };
-
     return next();
   } catch (error) {
     return next(new ApiError(401, "Unauthorized. Invalid or expired token."));

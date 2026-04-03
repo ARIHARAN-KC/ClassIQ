@@ -40,8 +40,16 @@ const checkSignature = (buffer: Buffer, mimeType: string): boolean => {
 
     case "application/zip":
     case "application/x-zip-compressed":
-    case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
       return start[0] === 0x50 && start[1] === 0x4b;
+
+    case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+      // DOCX is a ZIP file with specific structure
+      if (start[0] === 0x50 && start[1] === 0x4b) {
+        // Check for '[Content_Types].xml' within first 4KB
+        const header = buffer.subarray(0, 4096).toString();
+        return header.includes("[Content_Types].xml");
+      }
+      return false;
 
     case "application/msword":
       return start[0] === 0xd0 && start[1] === 0xcf;
@@ -67,7 +75,6 @@ export const upload = multer({
   },
 });
 
-// Supports both upload.single() and upload.array()
 export const validateFileSignature = (req: any, _res: any, next: any) => {
   const files: Express.Multer.File[] = [];
 
@@ -78,7 +85,7 @@ export const validateFileSignature = (req: any, _res: any, next: any) => {
 
   for (const file of files) {
     if (!checkSignature(file.buffer, file.mimetype)) {
-      return next(new ApiError(400, `Invalid file signature: ${file.originalname}`));
+      return next(new ApiError(400, `Invalid or corrupted file: ${file.originalname}`));
     }
   }
 

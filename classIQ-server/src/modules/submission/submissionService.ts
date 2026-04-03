@@ -47,7 +47,7 @@ export const uploadSubmissionService = async (
     }
 
     // Deadline check
-    if (new Date() > new Date(assignment.dueDate)) {
+    if (new Date() >= new Date(assignment.dueDate)) {
       throw new ApiError(400, "Assignment deadline has passed");
     }
 

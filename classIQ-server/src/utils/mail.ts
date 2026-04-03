@@ -57,7 +57,7 @@ export const sendEmail = async (options: EmailOptions): Promise<void> => {
     }
 
     if (!transporter) {
-      throw new ApiError(500, "Email service not configured");
+      throw new ApiError(500, "Email service not configured. Please check EMAIL_USER and EMAIL_PASSWORD.");
     }
 
     await transporter.sendMail({
