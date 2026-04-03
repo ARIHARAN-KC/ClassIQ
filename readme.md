@@ -81,7 +81,7 @@ ClassIQ integrates advanced AI capabilities powered by OpenRouter:
 - **OpenRouter** - AI model aggregation platform
 
 ### Object Storage
--**GDrive** - Object Storage area
+- **GDrive** - Object Storage area
 
 ### Package Manager
 - **Yarn** - Fast, reliable dependency management
