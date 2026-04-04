@@ -12,6 +12,13 @@ const generateJoinCode = () => {
   return crypto.randomBytes(3).toString("hex").toUpperCase(); // 6 chars
 };
 
+// Utility: Check user exists in populated/non-populated array
+const hasUser = (arr: any[], userId: string) => {
+  return arr.some((x: any) =>
+    (x?._id ? x._id.toString() : x.toString()) === userId
+  );
+};
+
 // CREATE CLASS (Teacher Only)
 export const createClass = asyncHandler(async (req: Request, res: Response) => {
   if (!req.user) throw new ApiError(401, "Unauthorized");
@@ -80,18 +87,12 @@ export const joinClass = asyncHandler(async (req: Request, res: Response) => {
 
   if (!classData) throw new ApiError(404, "Invalid join code");
 
-  const alreadyTeacher = classData.teachers.some(
-    (teacherId: mongoose.Types.ObjectId) => teacherId.toString() === req.user!.id
-  );
-
+  const alreadyTeacher = hasUser(classData.teachers as any[], req.user.id);
   if (alreadyTeacher) {
     throw new ApiError(400, "You are already a teacher of this class");
   }
 
-  const alreadyJoined = classData.students.some(
-    (studentId: mongoose.Types.ObjectId) => studentId.toString() === req.user!.id
-  );
-
+  const alreadyJoined = hasUser(classData.students as any[], req.user.id);
   if (alreadyJoined) {
     throw new ApiError(400, "Already joined this class");
   }
@@ -158,13 +159,8 @@ export const getClassById = asyncHandler(
       return res.json(new ApiResponse(200, "Class fetched successfully", classData));
     }
 
-    const isTeacher = classData.teachers.some(
-      (teacherId: mongoose.Types.ObjectId) => teacherId.toString() === req.user!.id
-    );
-
-    const isStudent = classData.students.some(
-      (studentId: mongoose.Types.ObjectId) => studentId.toString() === req.user!.id
-    );
+    const isTeacher = hasUser(classData.teachers as any[], req.user.id);
+    const isStudent = hasUser(classData.students as any[], req.user.id);
 
     if (!isTeacher && !isStudent) {
       throw new ApiError(403, "Forbidden. You are not part of this class.");
@@ -189,9 +185,7 @@ export const updateClass = asyncHandler(
 
     if (!classData) throw new ApiError(404, "Class not found");
 
-    const isTeacher = classData.teachers.some(
-      (teacherId: mongoose.Types.ObjectId) => teacherId.toString() === req.user!.id
-    );
+    const isTeacher = hasUser(classData.teachers as any[], req.user.id);
 
     if (!isTeacher) {
       throw new ApiError(403, "You are not allowed to update this class");
@@ -200,7 +194,11 @@ export const updateClass = asyncHandler(
     const { title, description } = req.body;
 
     if (title !== undefined) {
-      if (typeof title !== "string" || title.trim().length < 3 || title.trim().length > 100) {
+      if (
+        typeof title !== "string" ||
+        title.trim().length < 3 ||
+        title.trim().length > 100
+      ) {
         throw new ApiError(400, "Title must be between 3 and 100 characters");
       }
       classData.title = title.trim();
@@ -243,9 +241,7 @@ export const deleteClass = asyncHandler(
 
     if (!classData) throw new ApiError(404, "Class not found");
 
-    const isTeacher = classData.teachers.some(
-      (teacherId: mongoose.Types.ObjectId) => teacherId.toString() === req.user!.id
-    );
+    const isTeacher = hasUser(classData.teachers as any[], req.user.id);
 
     if (!isTeacher) {
       throw new ApiError(403, "You are not allowed to delete this class");
